@@ -1,29 +1,39 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Icon from '../../components/Icon';
 import Title from '../../components/Title';
 import Button from '../../components/Button';
 import InputLine from '../../components/InputLine';
 import WarningLine from '../../components/WarningLine';
-import { PAGE_CONFIGS, BUTTON_CONFIGS, INPUT_CONFIGS } from './DATA';
+import { PAGE_CONFIGS, BUTTON_CONFIGS, INPUT_CONFIGS, WARNINGS } from './DATA';
 import styled from 'styled-components';
 
-interface InputData {
-  [key: string]: {
+type InputKey = 'userId' | 'password';
+
+type InputData = Record<
+  InputKey,
+  {
     value: string;
     valid: boolean;
-  };
-}
+    error: string;
+  }
+>;
 
-const Login = () => {
+const Login: React.FC = () => {
+  const navigate = useNavigate();
   const [inputData, setInputData] = useState<InputData>({
-    userId: { value: '', valid: false },
-    password: { value: '', valid: false },
+    userId: { value: '', valid: false, error: '' },
+    password: { value: '', valid: false, error: '' },
   });
 
   const { title } = PAGE_CONFIGS;
-  const { btnName, btnStyle } = BUTTON_CONFIGS;
+
+  const goHome = (): void => {
+    navigate('/main');
+  };
 
   const updateInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const key: string = e.target.name;
+    const key: InputKey = e.target.name as InputKey;
     const value: string = e.target.value;
 
     setInputData((prev: InputData) => ({
@@ -32,25 +42,64 @@ const Login = () => {
     }));
   };
 
-  const submitInfo = () => {
-    console.log(inputData);
-    console.log('Login Clicked!!');
+  const onClickHandlers = {
+    login: () => {
+      // POST 통신 로직 집어넣기
+      console.log('login');
+      console.log(
+        'ID: ',
+        inputData.userId.value,
+        'PW: ',
+        inputData.password.value,
+      );
+    },
+    signup: () => {
+      console.log('signup!');
+      navigate('/signup');
+    },
   };
 
   return (
     <Wrapper>
+      <HomeBtnWrapper>
+        <Icon
+          iconStyle={{ size: '20', color: 'gray' }}
+          icon="home"
+          onClickHandler={goHome}
+        />
+      </HomeBtnWrapper>
       <Title title={title} />
-      {INPUT_CONFIGS.map(({ type, name }) => (
-        <React.Fragment key={name}>
-          <InputLine type={type} name={name} onChangeHandler={updateInput} />
-          {inputData[name].valid || <WarningLine />}
-        </React.Fragment>
+      {INPUT_CONFIGS.map(({ type, title, name }) => (
+        <InputWrapper key={name}>
+          <InputLine
+            type={type}
+            title={title}
+            name={name}
+            onChangeHandler={updateInput}
+          />
+          {inputData[name as InputKey].error && (
+            <WarningLine
+              warning={
+                WARNINGS[
+                  inputData[name as InputKey].error as keyof typeof WARNINGS
+                ]
+              }
+            />
+          )}
+        </InputWrapper>
       ))}
-      <Button
-        btnName={btnName}
-        btnStyle={btnStyle}
-        onClickHandler={submitInfo}
-      />
+      <ButtonWrapper>
+        {BUTTON_CONFIGS.map(({ type, btnName, btnStyle }) => (
+          <Button
+            key={btnName}
+            btnName={btnName}
+            btnStyle={btnStyle}
+            onClickHandler={
+              onClickHandlers[type as keyof typeof onClickHandlers]
+            }
+          />
+        ))}
+      </ButtonWrapper>
     </Wrapper>
   );
 };
@@ -62,7 +111,25 @@ const Wrapper = styled.div`
 
   ${({ theme }) => theme.flex.center}
   flex-direction: column;
-  gap: 20px;
   margin: auto;
   padding: 20px;
+`;
+
+const HomeBtnWrapper = styled.div`
+  width: 100%;
+  ${({ theme }) => theme.flex.right}
+`;
+
+const InputWrapper = styled.div`
+  width: 100%;
+  ${({ theme }) => theme.flex.center}
+  flex-direction: column;
+  margin-bottom: 20px;
+`;
+
+const ButtonWrapper = styled.div`
+  width: 100%;
+  ${({ theme }) => theme.flex.center}
+  flex-direction: column;
+  gap: 10px;
 `;

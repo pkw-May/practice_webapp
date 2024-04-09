@@ -9,6 +9,7 @@ interface BtnProps {
 
 interface BtnStyle {
   bgColor?: string;
+  hoverBgColor?: string;
   hoverColor?: string;
   fontColor?: string;
 }
@@ -46,5 +47,11 @@ const Wrapper = styled.button<{ btnStyle?: BtnStyle }>`
 
   &:hover {
     opacity: 1;
+    background-color: ${({ theme, btnStyle }) =>
+      btnStyle?.hoverBgColor && theme.colors[btnStyle.hoverBgColor]};
+    color: ${({ theme, btnStyle }) =>
+      btnStyle?.hoverColor
+        ? theme.colors[btnStyle.hoverColor]
+        : theme.colors.white};
   }
 `;

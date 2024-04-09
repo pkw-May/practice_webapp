@@ -3,9 +3,10 @@ import { css } from 'styled-components';
 const colors = {
   white: '#FFFFFF',
   lightGray: '#D9D9D9',
+  gray: '#989d9e',
   darkGray: '#515A58',
-  orange: '#fa8e00',
-  skyblue: '#00ddfa',
+  orange: '#e08907',
+  skyblue: '#04acc9',
   red: '#fa0075',
   green: '#13bf44',
   black: '#0e1d38',
@@ -20,19 +21,19 @@ const fonts = {
     font: 700 18px 'NotoSansKR';
   `,
   info: css`
-    font: 300 13px 'NotoSansKR';
-    color: ${({ theme }) => theme.colors.darkGray};
+    font: 300 15px 'NotoSansKR';
+    color: ${({ theme }) => theme.colors.gray};
   `,
   warning: css`
-    font: bold 20px 'NotoSansKR';
+    font: 300 15px 'NotoSansKR';
     color: ${({ theme }) => theme.colors.red};
   `,
   content: css`
-    font: 300 14px 'NotoSansKR';
+    font: 300 16px 'NotoSansKR';
     color: ${({ theme }) => theme.colors.black};
   `,
   comment: css`
-    font: 300 14px 'NotoSansKR';
+    font: 300 16px 'NotoSansKR';
     color: ${({ theme }) => theme.colors.darkGray};
   `,
 };
