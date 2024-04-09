@@ -2,7 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp as AwesomeProp } from '@fortawesome/fontawesome-svg-core';
-import { faBackward, faHome, faUser } from '@fortawesome/free-solid-svg-icons';
+import {
+  faAnglesLeft,
+  faHome,
+  faUser,
+} from '@fortawesome/free-solid-svg-icons';
 
 interface IconProps {
   iconStyle: IconStyle;
@@ -17,7 +21,7 @@ interface IconStyle {
 
 const iconList = {
   home: faHome,
-  back: faBackward,
+  back: faAnglesLeft,
   profile: faUser,
 };
 

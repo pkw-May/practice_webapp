@@ -61,13 +61,13 @@ const Login: React.FC = () => {
 
   return (
     <Wrapper>
-      <HomeBtnWrapper>
+      <TopBtnWrapper>
         <Icon
           iconStyle={{ size: '20', color: 'gray' }}
           icon="home"
           onClickHandler={goHome}
         />
-      </HomeBtnWrapper>
+      </TopBtnWrapper>
       <Title title={title} />
       {INPUT_CONFIGS.map(({ type, title, name }) => (
         <InputWrapper key={name}>
@@ -112,12 +112,14 @@ const Wrapper = styled.div`
   ${({ theme }) => theme.flex.center}
   flex-direction: column;
   margin: auto;
-  padding: 20px;
 `;
 
-const HomeBtnWrapper = styled.div`
+const TopBtnWrapper = styled.div`
   width: 100%;
   ${({ theme }) => theme.flex.right}
+
+  margin-top: 20px;
+  margin-bottom: -20px;
 `;
 
 const InputWrapper = styled.div`

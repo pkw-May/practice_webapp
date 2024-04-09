@@ -12,6 +12,7 @@ interface BtnStyle {
   hoverBgColor?: string;
   hoverColor?: string;
   fontColor?: string;
+  smallFont?: boolean;
 }
 
 const Button: React.FC<BtnProps> = ({ btnName, btnStyle, onClickHandler }) => {
@@ -31,7 +32,9 @@ export default Button;
 
 const Wrapper = styled.button<{ btnStyle?: BtnStyle }>`
   width: 100%;
-  padding: 13px 40px;
+
+  padding: ${({ btnStyle }) =>
+    btnStyle?.smallFont ? '13px 8px' : '13px 40px'};
 
   border-radius: ${({ theme }) => theme.radius.basic};
   background-color: ${({ theme, btnStyle }) =>
