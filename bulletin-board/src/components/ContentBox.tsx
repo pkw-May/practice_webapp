@@ -30,7 +30,7 @@ const ContentBox: React.FC<ContentInfo> = ({
   return (
     <Wrapper type={type} onClick={clickHandler}>
       <Header type={type}>{title}</Header>
-      {userName && <User>{userName}</User>}
+      {userName && <User type={type}>{userName}</User>}
       <Content type={type}>{body}</Content>
     </Wrapper>
   );
@@ -40,6 +40,7 @@ export default ContentBox;
 
 const Wrapper = styled.article<{ type: ContentType }>`
   width: 100%;
+  height: 300px;
   display: flex;
   align-items: left;
   flex-direction: column;
@@ -47,16 +48,17 @@ const Wrapper = styled.article<{ type: ContentType }>`
   padding: 16px 20px;
   margin-bottom: 10px;
 
-  border: 1px solid
-    ${({ theme, type }) =>
-      type === 'listItem' ? theme.colors.lightGray : theme.colors.darkGray};
+  border: 1px solid ${({ theme }) => theme.colors.gray};
   border-radius: ${({ theme }) => theme.radius.basic};
 
-  cursor: ${({ type }) => (type === 'listItem' ? 'pointer' : 'default')};
+  cursor: default;
 
   ${({ type }) =>
     type === 'listItem' &&
     css`
+      height: 110px;
+      border-color: ${({ theme }) => theme.colors.lightGray};
+      cursor: pointer;
       &:hover {
         margin-top: -2px;
         border: 2px solid ${({ theme }) => theme.colors.skyblue};
@@ -65,6 +67,10 @@ const Wrapper = styled.article<{ type: ContentType }>`
 `;
 
 const Header = styled.h5<{ type: ContentType }>`
+  text-align: left;
+  font: 14px;
+  font-weight: 600;
+
   ${({ type }) =>
     type === 'listItem' &&
     css`
@@ -73,22 +79,27 @@ const Header = styled.h5<{ type: ContentType }>`
       overflow: hidden;
       margin-bottom: 10px;
     `}
-
-  text-align: left;
-  font: 14px;
-  font-weight: 600;
 `;
 
-const User = styled.p`
+const User = styled.p<{ type: ContentType }>`
   align-self: flex-end;
-  margin-bottom: 10px;
+  margin: 15px 0px 25px 0px;
 
   text-align: right;
   font-size: 14px;
   color: ${({ theme }) => theme.colors.darkGray};
+
+  ${({ type }) =>
+    type === 'listItem' &&
+    css`
+      margin-bottom: 10px;
+    `}
 `;
 
 const Content = styled.div<{ type: ContentType }>`
+  text-align: left;
+  font-size: 16px;
+
   ${({ type }) =>
     type === 'listItem' &&
     css`
@@ -98,7 +109,4 @@ const Content = styled.div<{ type: ContentType }>`
       text-overflow: ellipsis;
       overflow: hidden;
     `}
-
-  text-align: left;
-  font-size: 16px;
 `;

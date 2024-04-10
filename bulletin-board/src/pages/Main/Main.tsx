@@ -1,41 +1,58 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AccountContext } from '../../ContextAPI/AccountContext';
 import ContentBox, { ContentInfo } from '../../components/ContentBox';
 import { Icon, Title, Button } from '../../components';
 import { PAGE_CONFIGS, BUTTON_CONFIGS } from './DATA';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 
 const Main: React.FC = () => {
   const navigate = useNavigate();
+  const { userStatus, logout, getSession } = useContext(AccountContext);
   const [contentList, setContentList] = useState<ContentInfo[]>([]);
+
   const getData = () => {
+    // ======================================//
+    /** ✨✨✨--- REDUX & 에러 핸들링 ---✨✨✨ */
     fetch('https://jsonplaceholder.typicode.com/posts')
       .then(res => res.json())
       .then(res => {
         setContentList(res);
       });
+    /** ✨✨✨--- REDUX & 에러 핸들링 ---✨✨✨ */
+    // ======================================//
   };
 
-  useEffect(() => {
-    getData();
-  }, []);
-
   const clickProfile = () => {
-    console.log('profile clicked!');
-    navigate('/login');
+    if (userStatus.userSignedIn) {
+      if (window.confirm('로그아웃 하시겠습니까?')) {
+        logout();
+        navigate('/signin');
+      }
+    } else {
+      navigate('/signin');
+    }
   };
 
   const addContent = () => {
-    // check login 상태 & authentication
-    console.log('addContent!!');
-    navigate('/addContent');
+    if (userStatus.userTokenCorrect) {
+      navigate('/addContent');
+    } else {
+      window.alert('로그인이 필요한 기능입니다.');
+      navigate('/signin');
+    }
   };
+
+  useEffect(() => {
+    getSession();
+    getData();
+  }, []);
 
   return (
     <Wrapper>
       <TopBtnWrapper>
         <Icon
-          icon="profile"
+          icon={userStatus.userSignedIn ? 'signout' : 'signin'}
           iconStyle={{ color: 'gray', size: '20' }}
           onClickHandler={clickProfile}
         />

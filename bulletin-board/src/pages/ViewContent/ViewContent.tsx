@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { AccountContext } from '../../ContextAPI/AccountContext';
 import { Icon, Title, ContentBox, Button, InputBox } from '../../components';
 import { ContentInfo } from '../../components/ContentBox';
-import { CommentInfo } from './CommentBox';
-import CommentBox from './CommentBox';
+import CommentBox, { CommentInfo } from './CommentBox';
 import { PAGE_CONFIGS, COMMENT_BTN_CONFIG } from './DATA';
 import styled from 'styled-components';
 
 const AddContent: React.FC = () => {
   const navigate = useNavigate();
   const params = useParams();
+  const { userStatus, getSession } = useContext(AccountContext);
   const type = 'viewItem';
   const [content, setContent] = useState<ContentInfo>({
     type: type,
@@ -29,8 +30,14 @@ const AddContent: React.FC = () => {
   };
 
   const submitComment = () => {
-    // inputData 보내기
-    console.log('Comment Submitted');
+    if (userStatus.userTokenCorrect) {
+      // ======================================//
+      // POST COMMENT API CALL
+      // ======================================//
+    } else {
+      window.alert('로그인이 필요한 기능입니다.');
+      navigate('/signin');
+    }
   };
 
   const getContent = (id: string) => {
@@ -61,6 +68,7 @@ const AddContent: React.FC = () => {
   };
 
   useEffect(() => {
+    getSession();
     if (!params.id) {
       return;
     }
@@ -101,8 +109,8 @@ const AddContent: React.FC = () => {
       </CommentInputWrapper>
       <CommentList>
         {comments.length > 0 &&
-          comments.map(({ id, name, body }) => (
-            <CommentBox key={id} name={name} body={body} />
+          comments.map(({ id, email, body }) => (
+            <CommentBox key={id} email={email} body={body} />
           ))}
       </CommentList>
     </Wrapper>
@@ -116,6 +124,7 @@ const Wrapper = styled.div`
   ${({ theme }) => theme.flex.center}
   flex-direction: column;
   margin: auto;
+  margin-bottom: 100px;
   gap: 20px;
 `;
 
@@ -138,11 +147,15 @@ const CommentInputWrapper = styled.div`
   grid-template-columns: 2.5fr 1fr;
   gap: 6px;
   align-items: end;
+
+  margin-bottom: 10px;
 `;
 
 const CommentList = styled.ul`
   width: 100%;
   ${({ theme }) => theme.flex.center}
   flex-direction: column;
-  gap: 3px;
+
+  border: 1px solid ${({ theme }) => theme.colors.gray};
+  border-radius: ${({ theme }) => theme.radius.basic};
 `;

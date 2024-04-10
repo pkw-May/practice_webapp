@@ -1,23 +1,22 @@
 import React, { useState } from 'react';
-import Icon from '../../components/Icon';
-import Title from '../../components/Title';
-import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { useFormValidation } from '../../hooks/useFormValidation';
+import { useCheckId } from '../../hooks/useCheckId';
+import { Icon, Title, InputLine, Button, WarningLine } from '../../components';
 import {
   CHECK_BTN_CONFIG,
   INPUT_CONFIGS,
   PAGE_CONFIGS,
   SIGNUP_BTN_CONFIG,
-  WARNINGS,
 } from './DATA';
-import InputLine from '../../components/InputLine';
-import Button from '../../components/Button';
-import WarningLine from '../../components/WarningLine';
-import { useNavigate } from 'react-router-dom';
+
+import styled from 'styled-components';
 
 type InputKey = 'userId' | 'password' | 'checkPassword';
 type InputData = Record<
   InputKey,
   {
+    checked?: boolean;
     value: string;
     valid: boolean;
     error: string;
@@ -26,10 +25,12 @@ type InputData = Record<
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { checkExist } = useCheckId();
+  const { validateUserId, validatePassword } = useFormValidation();
   const [inputData, setInputData] = useState({
-    userId: { value: '', valid: false, error: 'check' },
-    password: { value: '', valid: false, error: 'length' },
-    checkPassword: { value: '', valid: false, error: 'c' },
+    userId: { value: '', valid: false, checked: false, error: '' },
+    password: { value: '', valid: false, error: '' },
+    checkPassword: { value: '', valid: false, error: '' },
   });
   const { title } = PAGE_CONFIGS;
 
@@ -37,23 +38,111 @@ const Signup = () => {
     const key = e.target.name as InputKey;
     const value = e.target.value;
 
-    setInputData((prev: InputData) => ({
+    setInputData(prev => ({
       ...prev,
       [key]: { ...prev[key], value: value },
     }));
   };
 
   const goBack = () => {
-    navigate('/login');
+    navigate('/signin');
   };
 
   const checkId = () => {
     console.log('check id!');
+    if (!inputData.userId.valid) {
+      const { valid, error } = validateUserId(inputData.userId.value);
+      setInputData(prev => ({
+        ...prev,
+        userId: {
+          ...prev.userId,
+          valid: valid,
+          error: error,
+        },
+      }));
+    } else {
+      const { valid, message } = checkExist(inputData.userId.value);
+      if (valid) {
+        window.alert(message);
+      }
+      setInputData(prev => ({
+        ...prev,
+        userId: {
+          ...prev.userId,
+          valid: valid,
+          error: message,
+        },
+      }));
+    }
   };
 
   const submitData = (e: React.MouseEvent<HTMLButtonElement> | any) => {
     console.log(e);
     console.log('submit clicked!');
+
+    if (
+      inputData.userId.valid &&
+      inputData.userId.value &&
+      inputData.password.valid &&
+      inputData.password.value &&
+      inputData.checkPassword.valid &&
+      inputData.checkPassword.value
+    ) {
+      // ======================================//
+      /** ✨✨✨--- REDUX & 에러 핸들링 ---✨✨✨ */
+
+      // POST USER API CALL!!!!!!!
+
+      // ======================================//
+
+      console.log('Ok to submit user info!');
+    } else {
+      if (inputData.userId.valid && !inputData.userId.checked) {
+        setInputData(prev => ({
+          ...prev,
+          userId: {
+            ...prev.userId,
+            valid: false,
+            error: '아이디 중복을 확인해 주세요.',
+          },
+        }));
+      }
+
+      if (!inputData.userId.valid) {
+        const { valid, error } = validateUserId(inputData.userId.value);
+        setInputData(prev => ({
+          ...prev,
+          userId: {
+            ...prev.userId,
+            valid: valid,
+            error: error,
+          },
+        }));
+      }
+
+      if (!inputData.password.valid) {
+        const { valid, error } = validatePassword(inputData.password.value);
+        setInputData(prev => ({
+          ...prev,
+          password: {
+            ...prev.password,
+            valid: valid,
+            error: error,
+          },
+        }));
+      }
+
+      if (inputData.password.value !== inputData.checkPassword.value) {
+        setInputData(prev => ({
+          ...prev,
+          checkPassword: {
+            ...prev.checkPassword,
+            valid: false,
+            error: '비밀번호가 일치하지 않습니다.',
+          },
+        }));
+      }
+    }
   };
 
   return (
@@ -80,6 +169,11 @@ const Signup = () => {
           btnStyle={CHECK_BTN_CONFIG.btnStyle}
           onClickHandler={checkId}
         />
+        {inputData[INPUT_CONFIGS[0].name as InputKey].error && (
+          <WarningLine
+            warning={inputData[INPUT_CONFIGS[0].name as InputKey].error}
+          />
+        )}
       </CheckWrapper>
 
       {INPUT_CONFIGS.slice(1).map(({ type, title, name }) => {
@@ -92,13 +186,7 @@ const Signup = () => {
               onChangeHandler={updateInput}
             />
             {inputData[name as InputKey].error && (
-              <WarningLine
-                warning={
-                  WARNINGS[
-                    inputData[name as InputKey].error as keyof typeof WARNINGS
-                  ]
-                }
-              />
+              <WarningLine warning={inputData[name as InputKey].error} />
             )}
           </InputWrapper>
         );

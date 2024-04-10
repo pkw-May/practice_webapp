@@ -9,7 +9,7 @@ const colors = {
   skyblue: '#04acc9',
   red: '#fa0075',
   green: '#13bf44',
-  black: '#0e1d38',
+  black: '#112c42',
 };
 
 const fonts = {

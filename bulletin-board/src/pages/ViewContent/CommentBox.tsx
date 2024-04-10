@@ -1,18 +1,30 @@
 import React from 'react';
+import { Icon } from '../../components';
 import styled from 'styled-components';
 
 export interface CommentInfo {
   postId?: number;
   id?: number;
-  name: string;
-  email?: string;
+  name?: string;
+  email: string;
   body: string;
 }
 
-const CommentBox: React.FC<CommentInfo> = ({ name, body }) => {
+const CommentBox: React.FC<CommentInfo> = ({ email, body }) => {
+  const extractId = (email: string): string => {
+    const idx = email.search(/@/gi);
+    return email.slice(0, idx);
+  };
+
   return (
     <Wrapper>
-      <Header>{name}</Header>
+      <HeaderWrapper>
+        <Icon
+          icon="user"
+          iconStyle={{ size: '16', color: 'darkGray', disable: true }}
+        />
+        <Header>{extractId(email)}</Header>
+      </HeaderWrapper>
       <Comment>{body}</Comment>
     </Wrapper>
   );
@@ -27,23 +39,27 @@ const Wrapper = styled.article`
   flex-direction: column;
 
   padding: 16px 20px;
-  margin-bottom: 10px;
 
-  border: 1px solid ${({ theme }) => theme.colors.lightGray};
-  border-radius: ${({ theme }) => theme.radius.basic};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.lightGray};
+`;
+
+const HeaderWrapper = styled.div`
+  width: 100%;
+  ${({ theme }) => theme.flex.left}
+  border-bottom: 1px solid ${({ theme }) => theme.colors.darkGray};
+  padding-bottom: 5px;
+  margin-bottom: 10px;
 `;
 
 const Header = styled.h5`
-  margin-bottom: 10px;
-
+  margin-left: 5px;
+  color: ${({ theme }) => theme.colors.darkGray};
   text-align: left;
-  font: 14px;
-  font-weight: 600;
 `;
 
 const Comment = styled.div`
-  overflow: scroll;
-
+  ${({ theme }) => theme.fonts.comment}
   text-align: left;
-  font-size: 16px;
+
+  overflow: scroll;
 `;

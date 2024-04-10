@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AccountContext } from '../../ContextAPI/AccountContext';
+import { useFormValidation } from '../../hooks/useFormValidation';
 import Icon from '../../components/Icon';
 import Title from '../../components/Title';
 import Button from '../../components/Button';
 import InputLine from '../../components/InputLine';
 import WarningLine from '../../components/WarningLine';
-import { PAGE_CONFIGS, BUTTON_CONFIGS, INPUT_CONFIGS, WARNINGS } from './DATA';
+import { PAGE_CONFIGS, BUTTON_CONFIGS, INPUT_CONFIGS } from './DATA';
 import styled from 'styled-components';
 
 type InputKey = 'userId' | 'password';
@@ -19,11 +21,13 @@ type InputData = Record<
   }
 >;
 
-const Login: React.FC = () => {
+const Signin: React.FC = () => {
   const navigate = useNavigate();
+  const { authenticate } = useContext(AccountContext);
+  const { validateUserId, validatePassword } = useFormValidation();
   const [inputData, setInputData] = useState<InputData>({
-    userId: { value: '', valid: false, error: '' },
-    password: { value: '', valid: false, error: '' },
+    userId: { value: '', valid: true, error: '' },
+    password: { value: '', valid: true, error: '' },
   });
 
   const { title } = PAGE_CONFIGS;
@@ -42,16 +46,52 @@ const Login: React.FC = () => {
     }));
   };
 
-  const onClickHandlers = {
-    login: () => {
-      // POST 통신 로직 집어넣기
-      console.log('login');
-      console.log(
-        'ID: ',
+  const clickSignin = async () => {
+    if (
+      inputData.userId.value &&
+      inputData.userId.valid &&
+      inputData.password.value &&
+      inputData.password.valid
+    ) {
+      // =======================
+      // REDUX!!!!!
+      // =======================
+      const result = await authenticate(
         inputData.userId.value,
-        'PW: ',
         inputData.password.value,
       );
+
+      if (result) {
+        navigate('/main');
+      } else {
+        window.alert('확인되지 않는 사용자입니다.');
+      }
+    } else {
+      const idValidation = validateUserId(inputData.userId.value);
+      setInputData(prev => ({
+        ...prev,
+        userId: {
+          ...prev.userId,
+          valid: idValidation.valid,
+          error: idValidation.error,
+        },
+      }));
+
+      const pwValidation = validatePassword(inputData.password.value);
+      setInputData(prev => ({
+        ...prev,
+        password: {
+          ...prev.password,
+          valid: pwValidation.valid,
+          error: pwValidation.error,
+        },
+      }));
+    }
+  };
+
+  const ON_CLICK_HANDLERS = {
+    signin: () => {
+      clickSignin();
     },
     signup: () => {
       console.log('signup!');
@@ -78,13 +118,7 @@ const Login: React.FC = () => {
             onChangeHandler={updateInput}
           />
           {inputData[name as InputKey].error && (
-            <WarningLine
-              warning={
-                WARNINGS[
-                  inputData[name as InputKey].error as keyof typeof WARNINGS
-                ]
-              }
-            />
+            <WarningLine warning={inputData[name as InputKey].error} />
           )}
         </InputWrapper>
       ))}
@@ -95,7 +129,7 @@ const Login: React.FC = () => {
             btnName={btnName}
             btnStyle={btnStyle}
             onClickHandler={
-              onClickHandlers[type as keyof typeof onClickHandlers]
+              ON_CLICK_HANDLERS[type as keyof typeof ON_CLICK_HANDLERS]
             }
           />
         ))}
@@ -104,7 +138,7 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Signin;
 
 const Wrapper = styled.div`
   width: 300px;

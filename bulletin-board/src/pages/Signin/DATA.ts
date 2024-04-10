@@ -4,7 +4,7 @@ export const PAGE_CONFIGS = {
 
 export const BUTTON_CONFIGS = [
   {
-    type: 'login',
+    type: 'signin',
     btnName: 'Login',
     btnStyle: {
       bgColor: 'skyblue',
@@ -21,13 +21,6 @@ export const BUTTON_CONFIGS = [
     },
   },
 ];
-
-export const WARNINGS = {
-  check: '이메일 주소를 작성해주세요',
-  length: '4자 이상 작성해주세요',
-  addNum: '숫자를 하나 이상 작성해주세요',
-  addSym: '특수문자를 하나 이상 작성해주세요',
-};
 
 export const INPUT_CONFIGS = [
   { type: 'text', title: 'ID', name: 'userId' },

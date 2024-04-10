@@ -6,23 +6,28 @@ import {
   faAnglesLeft,
   faHome,
   faUser,
+  faSignOut,
+  faSignIn,
 } from '@fortawesome/free-solid-svg-icons';
 
 interface IconProps {
   iconStyle: IconStyle;
   icon: string;
-  onClickHandler: (e: React.MouseEvent<HTMLButtonElement> | any) => void | any;
+  onClickHandler?: (e: React.MouseEvent<HTMLButtonElement> | any) => void | any;
 }
 
 interface IconStyle {
   color?: string;
   size?: string;
+  disable?: boolean;
 }
 
 const iconList = {
   home: faHome,
   back: faAnglesLeft,
-  profile: faUser,
+  signin: faSignIn,
+  signout: faSignOut,
+  user: faUser,
 };
 
 const Icon: React.FC<IconProps> = ({ icon, iconStyle, onClickHandler }) => {
@@ -30,7 +35,9 @@ const Icon: React.FC<IconProps> = ({ icon, iconStyle, onClickHandler }) => {
     <IconWrapper
       iconStyle={iconStyle}
       onClick={e => {
-        onClickHandler(e);
+        if (onClickHandler) {
+          onClickHandler(e);
+        }
       }}
     >
       <FontAwesomeIcon
@@ -45,9 +52,12 @@ export default Icon;
 const IconWrapper = styled.div<{ iconStyle: IconStyle }>`
   width: auto;
   padding: 5px;
+
   color: ${({ theme, iconStyle }) =>
     iconStyle.color ? theme.colors[iconStyle.color] : theme.colors.skyblue};
+
   font-size: ${({ iconStyle }) =>
     iconStyle.size ? `${iconStyle.size}px` : '16px'};
-  cursor: pointer;
+
+  cursor: ${({ iconStyle }) => (iconStyle.disable ? 'default' : 'pointer')};
 `;
