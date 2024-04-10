@@ -22,7 +22,7 @@ const fonts = {
   `,
   info: css`
     font: 300 15px 'NotoSansKR';
-    color: ${({ theme }) => theme.colors.gray};
+    color: ${({ theme }) => theme.colors.green};
   `,
   warning: css`
     font: 300 15px 'NotoSansKR';

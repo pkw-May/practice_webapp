@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormValidation } from '../../hooks/useFormValidation';
 import { useCheckId } from '../../hooks/useCheckId';
@@ -11,6 +11,7 @@ import {
 } from './DATA';
 
 import styled from 'styled-components';
+import { AccountContext } from '../../ContextAPI/AccountContext';
 
 type InputKey = 'userId' | 'password' | 'checkPassword';
 type InputData = Record<
@@ -25,6 +26,7 @@ type InputData = Record<
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { authenticate } = useContext(AccountContext);
   const { checkExist } = useCheckId();
   const { validateUserId, validatePassword } = useFormValidation();
   const [inputData, setInputData] = useState({
@@ -60,15 +62,25 @@ const Signup = () => {
           error: error,
         },
       }));
+      if (valid) {
+        const { valid, message } = checkExist(inputData.userId.value);
+        setInputData(prev => ({
+          ...prev,
+          userId: {
+            ...prev.userId,
+            checked: valid,
+            valid: valid,
+            error: message,
+          },
+        }));
+      }
     } else {
       const { valid, message } = checkExist(inputData.userId.value);
-      if (valid) {
-        window.alert(message);
-      }
       setInputData(prev => ({
         ...prev,
         userId: {
           ...prev.userId,
+          checked: valid,
           valid: valid,
           error: message,
         },
@@ -76,10 +88,7 @@ const Signup = () => {
     }
   };
 
-  const submitData = (e: React.MouseEvent<HTMLButtonElement> | any) => {
-    console.log(e);
-    console.log('submit clicked!');
-
+  const submitData = async (e: React.MouseEvent<HTMLButtonElement> | any) => {
     if (
       inputData.userId.valid &&
       inputData.userId.value &&
@@ -93,9 +102,12 @@ const Signup = () => {
 
       // POST USER API CALL!!!!!!!
 
+      const result = await authenticate('may@gmail.com', 'qwer1234!');
+      if (result) {
+        window.alert('회원가입 성공!!');
+        navigate('/main');
+      }
       // ======================================//
-
-      console.log('Ok to submit user info!');
     } else {
       if (inputData.userId.valid && !inputData.userId.checked) {
         setInputData(prev => ({
@@ -118,6 +130,10 @@ const Signup = () => {
             error: error,
           },
         }));
+        if (!inputData.userId.checked) {
+          window.alert('아이디 중복 확인을 진행합니다.');
+          checkId();
+        }
       }
 
       if (!inputData.password.valid) {
@@ -141,9 +157,52 @@ const Signup = () => {
             error: '비밀번호가 일치하지 않습니다.',
           },
         }));
+      } else {
+        setInputData(prev => ({
+          ...prev,
+          checkPassword: {
+            ...prev.checkPassword,
+            valid: true,
+            error: '',
+          },
+        }));
       }
     }
   };
+
+  useEffect(() => {
+    setInputData(prev => ({
+      ...prev,
+      userId: {
+        ...prev.userId,
+        checked: false,
+        valid: false,
+        error: '',
+      },
+    }));
+  }, [inputData.userId.value]);
+
+  useEffect(() => {
+    setInputData(prev => ({
+      ...prev,
+      password: {
+        ...prev.password,
+        valid: false,
+        error: '',
+      },
+    }));
+  }, [inputData.password.value]);
+
+  useEffect(() => {
+    setInputData(prev => ({
+      ...prev,
+      checkPassword: {
+        ...prev.checkPassword,
+        valid: false,
+        error: '',
+      },
+    }));
+  }, [inputData.checkPassword.value]);
 
   return (
     <Wrapper>
@@ -171,6 +230,7 @@ const Signup = () => {
         />
         {inputData[INPUT_CONFIGS[0].name as InputKey].error && (
           <WarningLine
+            isInfo={inputData[INPUT_CONFIGS[0].name as InputKey].valid}
             warning={inputData[INPUT_CONFIGS[0].name as InputKey].error}
           />
         )}
@@ -186,7 +246,10 @@ const Signup = () => {
               onChangeHandler={updateInput}
             />
             {inputData[name as InputKey].error && (
-              <WarningLine warning={inputData[name as InputKey].error} />
+              <WarningLine
+                isInfo={inputData[name as InputKey].valid}
+                warning={inputData[name as InputKey].error}
+              />
             )}
           </InputWrapper>
         );

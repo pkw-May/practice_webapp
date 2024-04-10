@@ -91,7 +91,7 @@ const Wrapper = styled.div`
 
 const TopBtnWrapper = styled.div`
   width: 100%;
-  ${({ theme }) => theme.flex.left}
+  ${({ theme }) => theme.flex.right}
 
   margin-top: 20px;
   margin-bottom: -30px;

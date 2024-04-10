@@ -18,7 +18,7 @@ interface BtnStyle {
 const Button: React.FC<BtnProps> = ({ btnName, btnStyle, onClickHandler }) => {
   return (
     <Wrapper
-      btnStyle={btnStyle}
+      $btnStyle={btnStyle}
       onClick={e => {
         onClickHandler(e);
       }}
@@ -30,19 +30,19 @@ const Button: React.FC<BtnProps> = ({ btnName, btnStyle, onClickHandler }) => {
 
 export default Button;
 
-const Wrapper = styled.button<{ btnStyle?: BtnStyle }>`
+const Wrapper = styled.button<{ $btnStyle?: BtnStyle }>`
   width: 100%;
 
-  padding: ${({ btnStyle }) =>
-    btnStyle?.smallFont ? '13px 8px' : '13px 40px'};
+  padding: ${({ $btnStyle }) =>
+    $btnStyle?.smallFont ? '13px 8px' : '13px 40px'};
 
   border-radius: ${({ theme }) => theme.radius.basic};
-  background-color: ${({ theme, btnStyle }) =>
-    btnStyle?.bgColor && theme.colors[btnStyle.bgColor]};
+  background-color: ${({ theme, $btnStyle }) =>
+    $btnStyle?.bgColor && theme.colors[$btnStyle.bgColor]};
   ${({ theme }) => theme.fonts.button}
-  color: ${({ theme, btnStyle }) =>
-    btnStyle?.fontColor
-      ? theme.colors[btnStyle.fontColor]
+  color: ${({ theme, $btnStyle }) =>
+    $btnStyle?.fontColor
+      ? theme.colors[$btnStyle.fontColor]
       : theme.colors.darkGray};
 
   cursor: pointer;
@@ -50,11 +50,11 @@ const Wrapper = styled.button<{ btnStyle?: BtnStyle }>`
 
   &:hover {
     opacity: 1;
-    background-color: ${({ theme, btnStyle }) =>
-      btnStyle?.hoverBgColor && theme.colors[btnStyle.hoverBgColor]};
-    color: ${({ theme, btnStyle }) =>
-      btnStyle?.hoverColor
-        ? theme.colors[btnStyle.hoverColor]
+    background-color: ${({ theme, $btnStyle }) =>
+      $btnStyle?.hoverBgColor && theme.colors[$btnStyle.hoverBgColor]};
+    color: ${({ theme, $btnStyle }) =>
+      $btnStyle?.hoverColor
+        ? theme.colors[$btnStyle.hoverColor]
         : theme.colors.white};
   }
 `;

@@ -1,7 +1,6 @@
 const userIdErrorMSG = {
   EMPTY: '아이디를 작성해 주세요',
   FORMAT: '이메일 형식을 지켜주세요',
-  CHECK: '아이디 중복을 확인해 주세요',
 };
 
 const passwordErrorMSG = {

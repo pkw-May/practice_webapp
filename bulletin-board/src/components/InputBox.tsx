@@ -16,16 +16,16 @@ const InputBox: React.FC<InputBoxProps> = ({
       onChange={e => {
         onChangeHandler(e);
       }}
-      type={type}
+      $type={type}
     />
   );
 };
 
 export default InputBox;
 
-const Wrapper = styled.textarea<{ type: InputBoxType }>`
+const Wrapper = styled.textarea<{ $type: InputBoxType }>`
   width: 100%;
-  height: ${({ type }) => (type === 'content' ? '200px' : '48px')};
+  height: ${({ $type }) => ($type === 'content' ? '200px' : '48px')};
   padding: 15px;
   ${({ theme }) => theme.flex.left}
   border-radius: ${({ theme }) => theme.radius.basic};

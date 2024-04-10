@@ -26,8 +26,8 @@ const Signin: React.FC = () => {
   const { authenticate } = useContext(AccountContext);
   const { validateUserId, validatePassword } = useFormValidation();
   const [inputData, setInputData] = useState<InputData>({
-    userId: { value: '', valid: true, error: '' },
-    password: { value: '', valid: true, error: '' },
+    userId: { value: '', valid: false, error: '' },
+    password: { value: '', valid: false, error: '' },
   });
 
   const { title } = PAGE_CONFIGS;
@@ -46,6 +46,19 @@ const Signin: React.FC = () => {
     }));
   };
 
+  const submitUserInfo = async () => {
+    const result = await authenticate(
+      inputData.userId.value,
+      inputData.password.value,
+    );
+
+    if (result) {
+      navigate('/main');
+    } else {
+      window.alert('확인되지 않는 사용자입니다.');
+    }
+  };
+
   const clickSignin = async () => {
     if (
       inputData.userId.value &&
@@ -56,16 +69,7 @@ const Signin: React.FC = () => {
       // =======================
       // REDUX!!!!!
       // =======================
-      const result = await authenticate(
-        inputData.userId.value,
-        inputData.password.value,
-      );
-
-      if (result) {
-        navigate('/main');
-      } else {
-        window.alert('확인되지 않는 사용자입니다.');
-      }
+      submitUserInfo();
     } else {
       const idValidation = validateUserId(inputData.userId.value);
       setInputData(prev => ({
@@ -86,6 +90,10 @@ const Signin: React.FC = () => {
           error: pwValidation.error,
         },
       }));
+
+      if (idValidation.valid && pwValidation.valid) {
+        submitUserInfo();
+      }
     }
   };
 
@@ -94,7 +102,6 @@ const Signin: React.FC = () => {
       clickSignin();
     },
     signup: () => {
-      console.log('signup!');
       navigate('/signup');
     },
   };
@@ -118,7 +125,10 @@ const Signin: React.FC = () => {
             onChangeHandler={updateInput}
           />
           {inputData[name as InputKey].error && (
-            <WarningLine warning={inputData[name as InputKey].error} />
+            <WarningLine
+              isInfo={inputData[name as InputKey].valid}
+              warning={inputData[name as InputKey].error}
+            />
           )}
         </InputWrapper>
       ))}

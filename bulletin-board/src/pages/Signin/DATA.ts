@@ -23,6 +23,6 @@ export const BUTTON_CONFIGS = [
 ];
 
 export const INPUT_CONFIGS = [
-  { type: 'text', title: 'ID', name: 'userId' },
+  { type: 'text', title: 'Email', name: 'userId' },
   { type: 'password', title: 'Password', name: 'password' },
 ];

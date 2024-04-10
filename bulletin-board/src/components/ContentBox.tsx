@@ -28,17 +28,17 @@ const ContentBox: React.FC<ContentInfo> = ({
   };
 
   return (
-    <Wrapper type={type} onClick={clickHandler}>
-      <Header type={type}>{title}</Header>
-      {userName && <User type={type}>{userName}</User>}
-      <Content type={type}>{body}</Content>
+    <Wrapper $type={type} onClick={clickHandler}>
+      <Header $type={type}>{title}</Header>
+      {userName && <User $type={type}>{userName}</User>}
+      <Content $type={type}>{body}</Content>
     </Wrapper>
   );
 };
 
 export default ContentBox;
 
-const Wrapper = styled.article<{ type: ContentType }>`
+const Wrapper = styled.article<{ $type: ContentType }>`
   width: 100%;
   height: 300px;
   display: flex;
@@ -53,8 +53,8 @@ const Wrapper = styled.article<{ type: ContentType }>`
 
   cursor: default;
 
-  ${({ type }) =>
-    type === 'listItem' &&
+  ${({ $type }) =>
+    $type === 'listItem' &&
     css`
       height: 110px;
       border-color: ${({ theme }) => theme.colors.lightGray};
@@ -66,13 +66,13 @@ const Wrapper = styled.article<{ type: ContentType }>`
     `}
 `;
 
-const Header = styled.h5<{ type: ContentType }>`
+const Header = styled.h5<{ $type: ContentType }>`
   text-align: left;
   font: 14px;
   font-weight: 600;
 
-  ${({ type }) =>
-    type === 'listItem' &&
+  ${({ $type }) =>
+    $type === 'listItem' &&
     css`
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -81,7 +81,7 @@ const Header = styled.h5<{ type: ContentType }>`
     `}
 `;
 
-const User = styled.p<{ type: ContentType }>`
+const User = styled.p<{ $type: ContentType }>`
   align-self: flex-end;
   margin: 15px 0px 25px 0px;
 
@@ -89,19 +89,19 @@ const User = styled.p<{ type: ContentType }>`
   font-size: 14px;
   color: ${({ theme }) => theme.colors.darkGray};
 
-  ${({ type }) =>
-    type === 'listItem' &&
+  ${({ $type }) =>
+    $type === 'listItem' &&
     css`
       margin-bottom: 10px;
     `}
 `;
 
-const Content = styled.div<{ type: ContentType }>`
+const Content = styled.div<{ $type: ContentType }>`
   text-align: left;
   font-size: 16px;
 
-  ${({ type }) =>
-    type === 'listItem' &&
+  ${({ $type }) =>
+    $type === 'listItem' &&
     css`
       display: -webkit-box;
       -webkit-line-clamp: 3;

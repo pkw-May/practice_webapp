@@ -33,7 +33,7 @@ const iconList = {
 const Icon: React.FC<IconProps> = ({ icon, iconStyle, onClickHandler }) => {
   return (
     <IconWrapper
-      iconStyle={iconStyle}
+      $iconStyle={iconStyle}
       onClick={e => {
         if (onClickHandler) {
           onClickHandler(e);
@@ -49,15 +49,15 @@ const Icon: React.FC<IconProps> = ({ icon, iconStyle, onClickHandler }) => {
 
 export default Icon;
 
-const IconWrapper = styled.div<{ iconStyle: IconStyle }>`
+const IconWrapper = styled.div<{ $iconStyle: IconStyle }>`
   width: auto;
   padding: 5px;
 
-  color: ${({ theme, iconStyle }) =>
-    iconStyle.color ? theme.colors[iconStyle.color] : theme.colors.skyblue};
+  color: ${({ theme, $iconStyle }) =>
+    $iconStyle.color ? theme.colors[$iconStyle.color] : theme.colors.skyblue};
 
-  font-size: ${({ iconStyle }) =>
-    iconStyle.size ? `${iconStyle.size}px` : '16px'};
+  font-size: ${({ $iconStyle }) =>
+    $iconStyle.size ? `${$iconStyle.size}px` : '16px'};
 
-  cursor: ${({ iconStyle }) => (iconStyle.disable ? 'default' : 'pointer')};
+  cursor: ${({ $iconStyle }) => ($iconStyle.disable ? 'default' : 'pointer')};
 `;

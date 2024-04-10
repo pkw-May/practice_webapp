@@ -1,10 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Main from './pages/Main/Main';
-import Signin from './pages/Signin/Signin';
-import Signup from './pages/Signup/Signup';
-import AddContent from './pages/AddContent/AddContent';
-import ViewContent from './pages/ViewContent/ViewContent';
+import { Main, Signin, Signup, AddContent, ViewContent } from './pages';
 
 function Router() {
   return (
