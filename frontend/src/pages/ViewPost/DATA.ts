@@ -1,6 +1,9 @@
 export const PAGE_CONFIGS = {
   title: '게시글 조회',
-  inputType: 'comment',
+  inputContent: {
+    type: 'comment',
+    name: 'comment',
+  },
 };
 
 export const COMMENT_BTN_CONFIG = {

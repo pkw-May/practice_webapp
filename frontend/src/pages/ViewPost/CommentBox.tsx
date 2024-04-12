@@ -7,10 +7,10 @@ export interface CommentInfo {
   id?: number;
   name?: string;
   email: string;
-  body: string;
+  content: string;
 }
 
-const CommentBox: React.FC<CommentInfo> = ({ email, body }) => {
+const CommentBox: React.FC<CommentInfo> = ({ email, content }) => {
   const extractId = (email: string): string => {
     const idx = email.search(/@/gi);
     return email.slice(0, idx);
@@ -25,7 +25,7 @@ const CommentBox: React.FC<CommentInfo> = ({ email, body }) => {
         />
         <Header>{extractId(email)}</Header>
       </HeaderWrapper>
-      <Comment>{body}</Comment>
+      <Comment>{content}</Comment>
     </Wrapper>
   );
 };

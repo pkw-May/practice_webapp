@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormValidation } from '../../hooks/useFormValidation';
-import { useCheckId } from '../../hooks/useCheckId';
+import { useCheckEmail } from '../../hooks/useCheckEmail';
 import { Icon, Title, InputLine, Button, WarningLine } from '../../components';
 import {
   CHECK_BTN_CONFIG,
@@ -27,7 +27,7 @@ type InputData = Record<
 const Signup = () => {
   const navigate = useNavigate();
   const { authenticate } = useContext(AccountContext);
-  const { checkExist } = useCheckId();
+  const { checkExist } = useCheckEmail();
   const { validateUserId, validatePassword } = useFormValidation();
   const [inputData, setInputData] = useState({
     userId: { value: '', valid: false, checked: false, error: '' },

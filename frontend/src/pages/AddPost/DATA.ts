@@ -1,10 +1,19 @@
 export const PAGE_CONFIGS = {
   title: '게시글 작성',
-  inputType: 'content',
+  inputContent: {
+    type: 'post',
+    name: 'content',
+    title: '내용',
+  },
+  inputTitle: {
+    type: 'text',
+    name: 'title',
+    title: '제목',
+  },
 };
 
 export const BUTTON_CONFIGS = {
-  type: 'addContent',
+  type: 'addPost',
   btnName: '글 작성',
   btnStyle: {
     bgColor: 'skyblue',

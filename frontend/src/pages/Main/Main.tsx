@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AccountContext } from '../../ContextAPI/AccountContext';
-import ContentBox, { ContentInfo } from '../../components/ContentBox';
+import PostBox, { PostInfo } from '../../components/PostBox';
 import { Icon, Title, Button } from '../../components';
 import { PAGE_CONFIGS, BUTTON_CONFIGS } from './DATA';
 import styled from 'styled-components';
@@ -9,7 +9,7 @@ import styled from 'styled-components';
 const Main: React.FC = () => {
   const navigate = useNavigate();
   const { userStatus, logout, getSession } = useContext(AccountContext);
-  const [contentList, setContentList] = useState<ContentInfo[]>([]);
+  const [postList, setPostList] = useState<PostInfo[]>([]);
 
   const getData = () => {
     // ======================================//
@@ -17,7 +17,7 @@ const Main: React.FC = () => {
     fetch('https://jsonplaceholder.typicode.com/posts')
       .then(res => res.json())
       .then(res => {
-        setContentList(res);
+        setPostList(res);
       });
     /** ✨✨✨--- REDUX & 에러 핸들링 ---✨✨✨ */
     // ======================================//
@@ -34,9 +34,9 @@ const Main: React.FC = () => {
     }
   };
 
-  const addContent = () => {
+  const addPost = () => {
     if (userStatus.userTokenCorrect) {
-      navigate('/addContent');
+      navigate('/addPost');
     } else {
       window.alert('로그인이 필요한 기능입니다.');
       navigate('/signin');
@@ -61,21 +61,21 @@ const Main: React.FC = () => {
       <Button
         btnName={BUTTON_CONFIGS.btnName}
         btnStyle={BUTTON_CONFIGS.btnStyle}
-        onClickHandler={addContent}
+        onClickHandler={addPost}
       />
-      <ContentWrapper>
-        {contentList.length > 0 &&
-          contentList.map(({ id, userId, title, body }: ContentInfo) => (
-            <ContentBox
+      <PostWrapper>
+        {postList.length > 0 &&
+          postList.map(({ id, userId, title, content }: PostInfo) => (
+            <PostBox
               type="listItem"
               key={id}
               id={id}
               userId={userId}
               title={title}
-              body={body}
+              content={content}
             />
           ))}
-      </ContentWrapper>
+      </PostWrapper>
     </Wrapper>
   );
 };
@@ -97,7 +97,7 @@ const TopBtnWrapper = styled.div`
   margin-bottom: -30px;
 `;
 
-const ContentWrapper = styled.div`
+const PostWrapper = styled.div`
   width: 100%;
   ${({ theme }) => theme.flex.center};
   flex-direction: column;

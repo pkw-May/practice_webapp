@@ -8,7 +8,7 @@ interface UserStatus {
 interface AccountContextType {
   sessionJWT: string;
   userStatus: UserStatus;
-  authenticate: (userName: string, password: string) => Promise<boolean>;
+  authenticate: (email: string, password: string) => Promise<boolean>;
   getSession: () => Promise<boolean>;
   logout: () => void;
 }
@@ -17,7 +17,7 @@ interface AccountProviderProps {
   children: ReactNode;
 }
 
-const USER_NAME = 'may@gmail.com';
+const EMAIL = 'may@gmail.com';
 const PASSWORD = 'qwer1234!';
 
 const defaultContextValue: AccountContextType = {
@@ -54,9 +54,9 @@ const AccountProvider: React.FC<AccountProviderProps> = ({ children }) => {
     });
   };
 
-  const authenticate = async (userName: string, password: string) => {
+  const authenticate = async (email: string, password: string) => {
     return await new Promise<boolean>((resolve, reject) => {
-      if (userName === USER_NAME && password === PASSWORD) {
+      if (email === EMAIL && password === PASSWORD) {
         let JWT = 'JWT_SAMPLE';
         setSessionJWT(JWT);
         window.sessionStorage.setItem('JWT', JWT);

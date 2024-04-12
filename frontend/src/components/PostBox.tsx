@@ -2,43 +2,37 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
-export type ContentType = 'listItem' | 'viewItem';
+export type PostType = 'listItem' | 'viewItem';
 
-export interface ContentInfo {
-  type: ContentType;
+export interface PostInfo {
+  type: PostType;
   id?: number;
   userId?: number;
-  userName?: string | any;
+  name?: string | any;
   title: string;
-  body: string;
+  content: string;
 }
 
-const ContentBox: React.FC<ContentInfo> = ({
-  type,
-  id,
-  userName,
-  title,
-  body,
-}) => {
+const PostBox: React.FC<PostInfo> = ({ type, id, name, title, content }) => {
   const navigate = useNavigate();
   const clickHandler = () => {
     if (type === 'listItem') {
-      navigate(`/content/${id}`);
+      navigate(`/post/${id}`);
     }
   };
 
   return (
     <Wrapper $type={type} onClick={clickHandler}>
       <Header $type={type}>{title}</Header>
-      {userName && <User $type={type}>{userName}</User>}
-      <Content $type={type}>{body}</Content>
+      {name && <User $type={type}>{name}</User>}
+      <Content $type={type}>{content}</Content>
     </Wrapper>
   );
 };
 
-export default ContentBox;
+export default PostBox;
 
-const Wrapper = styled.article<{ $type: ContentType }>`
+const Wrapper = styled.article<{ $type: PostType }>`
   width: 100%;
   height: 300px;
   display: flex;
@@ -66,7 +60,7 @@ const Wrapper = styled.article<{ $type: ContentType }>`
     `}
 `;
 
-const Header = styled.h5<{ $type: ContentType }>`
+const Header = styled.h5<{ $type: PostType }>`
   text-align: left;
   font: 14px;
   font-weight: 600;
@@ -81,7 +75,7 @@ const Header = styled.h5<{ $type: ContentType }>`
     `}
 `;
 
-const User = styled.p<{ $type: ContentType }>`
+const User = styled.p<{ $type: PostType }>`
   align-self: flex-end;
   margin: 15px 0px 25px 0px;
 
@@ -96,7 +90,7 @@ const User = styled.p<{ $type: ContentType }>`
     `}
 `;
 
-const Content = styled.div<{ $type: ContentType }>`
+const Content = styled.div<{ $type: PostType }>`
   text-align: left;
   font-size: 16px;
 

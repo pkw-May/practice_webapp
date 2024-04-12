@@ -1,21 +1,22 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AccountContext } from '../../ContextAPI/AccountContext';
-import { Icon, Title, ContentBox, Button, InputBox } from '../../components';
-import { ContentInfo } from '../../components/ContentBox';
+import { Icon, Title, PostBox, Button, InputBox } from '../../components';
+import { PostInfo } from '../../components/PostBox';
 import CommentBox, { CommentInfo } from './CommentBox';
 import { PAGE_CONFIGS, COMMENT_BTN_CONFIG } from './DATA';
 import styled from 'styled-components';
 
-const AddContent: React.FC = () => {
+const ViewPost: React.FC = () => {
   const navigate = useNavigate();
   const params = useParams();
   const { userStatus, getSession } = useContext(AccountContext);
   const type = 'viewItem';
-  const [content, setContent] = useState<ContentInfo>({
+  const [post, setPost] = useState<PostInfo>({
     type: type,
     title: '',
-    body: '',
+    name: '',
+    content: '',
   });
   const [comments, setComments] = useState<CommentInfo[]>([]);
   const [inputData, setInputData] = useState('');
@@ -40,11 +41,11 @@ const AddContent: React.FC = () => {
     }
   };
 
-  const getContent = (id: string) => {
+  const getPost = (id: string) => {
     fetch(`https://jsonplaceholder.typicode.com/posts/${id}`)
       .then(res => res.json())
       .then(res => {
-        setContent(res);
+        setPost(res);
         getUserName(res.userId);
       });
   };
@@ -53,10 +54,10 @@ const AddContent: React.FC = () => {
     fetch(`https://jsonplaceholder.typicode.com/users/${userId}`)
       .then(res => res.json())
       .then(res => {
-        setContent(prev => ({
+        setPost(prev => ({
           ...prev,
           type: type,
-          userName: res.username,
+          name: res.username,
         }));
       });
   };
@@ -72,7 +73,7 @@ const AddContent: React.FC = () => {
     if (!params.id) {
       return;
     }
-    getContent(params.id);
+    getPost(params.id);
     getComments(params.id);
   }, []);
 
@@ -89,18 +90,22 @@ const AddContent: React.FC = () => {
       <Title title={PAGE_CONFIGS.title} />
 
       <ContentWrapper>
-        {content && (
-          <ContentBox
+        {post && (
+          <PostBox
             type={type}
-            title={content.title}
-            userName={content.userName}
-            body={content.body}
+            title={post.title}
+            name={post.name}
+            content={post.content}
           />
         )}
       </ContentWrapper>
 
       <CommentInputWrapper>
-        <InputBox onChangeHandler={updateInput} type="comment" />
+        <InputBox
+          onChangeHandler={updateInput}
+          type="comment"
+          name={PAGE_CONFIGS.inputContent.name}
+        />
         <Button
           btnName={COMMENT_BTN_CONFIG.btnName}
           btnStyle={COMMENT_BTN_CONFIG.btnStyle}
@@ -109,15 +114,15 @@ const AddContent: React.FC = () => {
       </CommentInputWrapper>
       <CommentList>
         {comments.length > 0 &&
-          comments.map(({ id, email, body }) => (
-            <CommentBox key={id} email={email} body={body} />
+          comments.map(({ id, email, content }) => (
+            <CommentBox key={id} email={email} content={content} />
           ))}
       </CommentList>
     </Wrapper>
   );
 };
 
-export default AddContent;
+export default ViewPost;
 
 const Wrapper = styled.div`
   width: 300px;

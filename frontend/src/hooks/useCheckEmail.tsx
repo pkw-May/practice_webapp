@@ -8,15 +8,11 @@ const CHECK_ID_MSG = {
 interface UserInfoResponse {
   id: number;
   name: string;
-  username: string;
   email: string;
-  address: object;
-  phone: string;
-  website: string;
-  company: object;
+  deleted: boolean;
 }
 
-export const useCheckId = () => {
+export const useCheckEmail = () => {
   const [result, setResult] = useState<UserInfoResponse[]>([]);
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/users')

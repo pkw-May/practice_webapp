@@ -1,24 +1,32 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Icon, Title, Button, InputBox } from '../../components';
+import { Icon, Title, Button, InputBox, InputLine } from '../../components';
 import { PAGE_CONFIGS, BUTTON_CONFIGS } from './DATA';
 import styled from 'styled-components';
 
-const AddContent: React.FC = () => {
+const AddPost: React.FC = () => {
   const navigate = useNavigate();
-  const [inputData, setInputData] = useState('');
+  const [inputData, setInputData] = useState({
+    title: '',
+    content: '',
+  });
 
-  const updateInput = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
+  const updateInput = (
+    e:
+      | React.ChangeEvent<HTMLTextAreaElement>
+      | React.ChangeEvent<HTMLInputElement>,
+  ): void => {
+    const key = e.target.name;
     const value = e.target.value;
-    setInputData(value);
+    setInputData(prev => ({ ...prev, [key]: value }));
   };
 
   const goToList = () => {
     navigate('/main');
   };
 
-  const submitContent = () => {
-    console.log('Content Submitted');
+  const submitPost = () => {
+    console.log('Post Submitted');
   };
 
   return (
@@ -32,17 +40,28 @@ const AddContent: React.FC = () => {
       </TopBtnWrapper>
 
       <Title title={PAGE_CONFIGS.title} />
-      <InputBox onChangeHandler={updateInput} type="content" />
+      <InputLine
+        type={PAGE_CONFIGS.inputTitle.type}
+        title={PAGE_CONFIGS.inputTitle.title}
+        name={PAGE_CONFIGS.inputTitle.name}
+        onChangeHandler={updateInput}
+      />
+      <InputBox
+        type="post"
+        onChangeHandler={updateInput}
+        name={PAGE_CONFIGS.inputContent.name}
+        title={PAGE_CONFIGS.inputContent.title}
+      />
       <Button
         btnName={BUTTON_CONFIGS.btnName}
         btnStyle={BUTTON_CONFIGS.btnStyle}
-        onClickHandler={submitContent}
+        onClickHandler={submitPost}
       />
     </Wrapper>
   );
 };
 
-export default AddContent;
+export default AddPost;
 
 const Wrapper = styled.div`
   width: 300px;
