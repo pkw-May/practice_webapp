@@ -1,0 +1,30 @@
+CREATE DATABASE jungleTest;
+
+USE jungleTest;
+
+CREATE TABLE Users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    name VARCHAR(100),
+    deleted BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE Posts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    content TEXT NOT NULL,
+    date DATETIME,
+    deleted BOOLEAN DEFAULT FALSE,
+    userId INT,
+    FOREIGN KEY (userId) REFERENCES Users(id)
+);
+
+CREATE TABLE Comments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    content TEXT NOT NULL,
+    date DATETIME,
+    deleted BOOLEAN DEFAULT FALSE,
+    userId INT,
+    postId INT,
+    FOREIGN KEY (userId) REFERENCES Users(id),
+    FOREIGN KEY (postId) REFERENCES Posts(id)
+);

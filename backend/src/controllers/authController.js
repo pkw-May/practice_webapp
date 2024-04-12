@@ -1,9 +1,9 @@
 const authService = require('../services/authService');
 
-exports.register = async (req, res) => {
+exports.signup = async (req, res) => {
 	const { userId, password } = req.body;
 	try {
-		const user = await authService.register(userId, password);
+		const user = await authService.signup(userId, password);
 		res.status(201).json(user);
 	} catch (err) {
 		res.status(400).json({ error: err.message });
