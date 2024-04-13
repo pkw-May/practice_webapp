@@ -10,5 +10,5 @@
 .vscode
 
 # environment
-.env
-.localEnv
+*/.env
+*/.env.local
