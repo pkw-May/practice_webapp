@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useFormValidation } from '../../hooks/useFormValidation';
 import { useCheckEmail } from '../../hooks/useCheckEmail';
+import UserPool from '../../UserPool';
+import { useFormValidation } from '../../hooks/useFormValidation';
 import { Icon, Title, InputLine, Button, WarningLine } from '../../components';
 import {
   CHECK_BTN_CONFIG,
@@ -9,11 +10,9 @@ import {
   PAGE_CONFIGS,
   SIGNUP_BTN_CONFIG,
 } from './DATA';
-
 import styled from 'styled-components';
-import { AccountContext } from '../../ContextAPI/AccountContext';
 
-type InputKey = 'userId' | 'password' | 'checkPassword';
+type InputKey = 'username' | 'email' | 'password' | 'checkPassword';
 type InputData = Record<
   InputKey,
   {
@@ -26,11 +25,11 @@ type InputData = Record<
 
 const Signup = () => {
   const navigate = useNavigate();
-  const { authenticate } = useContext(AccountContext);
   const { checkExist } = useCheckEmail();
-  const { validateUserId, validatePassword } = useFormValidation();
+  const { validateEmail, validatePassword } = useFormValidation();
   const [inputData, setInputData] = useState({
-    userId: { value: '', valid: false, checked: false, error: '' },
+    username: { value: '', valid: false, error: '' },
+    email: { value: '', valid: false, checked: false, error: '' },
     password: { value: '', valid: false, error: '' },
     checkPassword: { value: '', valid: false, error: '' },
   });
@@ -50,24 +49,24 @@ const Signup = () => {
     navigate('/signin');
   };
 
-  const checkId = () => {
+  const checkId = async () => {
     console.log('check id!');
-    if (!inputData.userId.valid) {
-      const { valid, error } = validateUserId(inputData.userId.value);
+    if (!inputData.email.valid) {
+      const { valid, error } = validateEmail(inputData.email.value);
       setInputData(prev => ({
         ...prev,
-        userId: {
-          ...prev.userId,
+        email: {
+          ...prev.email,
           valid: valid,
           error: error,
         },
       }));
       if (valid) {
-        const { valid, message } = checkExist(inputData.userId.value);
+        const { valid, message } = await checkExist(inputData.email.value);
         setInputData(prev => ({
           ...prev,
-          userId: {
-            ...prev.userId,
+          email: {
+            ...prev.email,
             checked: valid,
             valid: valid,
             error: message,
@@ -75,11 +74,11 @@ const Signup = () => {
         }));
       }
     } else {
-      const { valid, message } = checkExist(inputData.userId.value);
+      const { valid, message } = await checkExist(inputData.email.value);
       setInputData(prev => ({
         ...prev,
-        userId: {
-          ...prev.userId,
+        email: {
+          ...prev.email,
           checked: valid,
           valid: valid,
           error: message,
@@ -90,8 +89,8 @@ const Signup = () => {
 
   const submitData = async (e: React.MouseEvent<HTMLButtonElement> | any) => {
     if (
-      inputData.userId.valid &&
-      inputData.userId.value &&
+      inputData.email.valid &&
+      inputData.email.value &&
       inputData.password.valid &&
       inputData.password.value &&
       inputData.checkPassword.valid &&
@@ -100,38 +99,49 @@ const Signup = () => {
       // ======================================//
       /** ✨✨✨--- REDUX & 에러 핸들링 ---✨✨✨ */
 
-      // POST USER API CALL!!!!!!!
+      const { email, password } = inputData;
+      UserPool.signUp(email.value, password.value, [], [], (err, data) => {
+        if (err) {
+          console.error(err);
+          window.alert(err.message);
+        } else {
+          if (data) {
+            const dataForUserCreation = {
+              email: data.user.getUsername(),
+              oauthId: data.userSub,
+            };
 
-      const result = await authenticate('may@gmail.com', 'qwer1234!');
-      if (result) {
-        window.alert('회원가입 성공!!');
-        navigate('/main');
-      }
+            navigate('/signup/confirm', {
+              state: { dataForUserCreation },
+            });
+          }
+        }
+      });
       // ======================================//
     } else {
-      if (inputData.userId.valid && !inputData.userId.checked) {
+      if (inputData.email.valid && !inputData.email.checked) {
         setInputData(prev => ({
           ...prev,
-          userId: {
-            ...prev.userId,
+          email: {
+            ...prev.email,
             valid: false,
             error: '아이디 중복을 확인해 주세요.',
           },
         }));
       }
 
-      if (!inputData.userId.valid) {
-        const { valid, error } = validateUserId(inputData.userId.value);
+      if (!inputData.email.valid) {
+        const { valid, error } = validateEmail(inputData.email.value);
         setInputData(prev => ({
           ...prev,
-          userId: {
-            ...prev.userId,
+          email: {
+            ...prev.email,
             valid: valid,
             error: error,
           },
         }));
-        if (!inputData.userId.checked) {
-          window.alert('아이디 중복 확인을 진행합니다.');
+        if (!inputData.email.checked) {
+          window.alert('아이디 중복 확인을 먼저 진행합니다.');
           checkId();
         }
       }
@@ -173,14 +183,14 @@ const Signup = () => {
   useEffect(() => {
     setInputData(prev => ({
       ...prev,
-      userId: {
-        ...prev.userId,
+      email: {
+        ...prev.email,
         checked: false,
         valid: false,
         error: '',
       },
     }));
-  }, [inputData.userId.value]);
+  }, [inputData.email.value]);
 
   useEffect(() => {
     setInputData(prev => ({

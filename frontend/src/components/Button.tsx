@@ -39,7 +39,9 @@ const Wrapper = styled.button<{ $btnStyle?: BtnStyle }>`
   border-radius: ${({ theme }) => theme.radius.basic};
 
   background-color: ${({ theme, $btnStyle }) =>
-    $btnStyle?.bgColor && theme.colors[$btnStyle.bgColor]};
+    $btnStyle?.bgColor
+      ? theme.colors[$btnStyle.bgColor]
+      : theme.colors.skyblue};
 
   ${({ theme }) => theme.fonts.button}
 
@@ -54,7 +56,9 @@ const Wrapper = styled.button<{ $btnStyle?: BtnStyle }>`
   &:hover {
     opacity: 1;
     background-color: ${({ theme, $btnStyle }) =>
-      $btnStyle?.hoverBgColor && theme.colors[$btnStyle.hoverBgColor]};
+      $btnStyle?.hoverBgColor
+        ? theme.colors[$btnStyle.hoverBgColor]
+        : theme.colors.skyblue};
 
     color: ${({ theme, $btnStyle }) =>
       $btnStyle?.hoverColor

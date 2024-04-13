@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AccountContext } from '../../ContextAPI/AccountContext';
-import PostBox, { PostInfo } from '../../components/PostBox';
+import { PostsContext, PostInfo } from '../../ContextAPI/PostsContext';
+import PostBox from '../../components/PostBox';
 import { Icon, Title, Button } from '../../components';
 import { PAGE_CONFIGS, BUTTON_CONFIGS } from './DATA';
 import styled from 'styled-components';
@@ -9,19 +10,7 @@ import styled from 'styled-components';
 const Main: React.FC = () => {
   const navigate = useNavigate();
   const { userStatus, logout, getSession } = useContext(AccountContext);
-  const [postList, setPostList] = useState<PostInfo[]>([]);
-
-  const getData = () => {
-    // ======================================//
-    /** ✨✨✨--- REDUX & 에러 핸들링 ---✨✨✨ */
-    fetch('https://jsonplaceholder.typicode.com/posts')
-      .then(res => res.json())
-      .then(res => {
-        setPostList(res);
-      });
-    /** ✨✨✨--- REDUX & 에러 핸들링 ---✨✨✨ */
-    // ======================================//
-  };
+  const { getPosts, posts } = useContext(PostsContext);
 
   const clickProfile = () => {
     if (userStatus.userSignedIn) {
@@ -45,7 +34,7 @@ const Main: React.FC = () => {
 
   useEffect(() => {
     getSession();
-    getData();
+    getPosts();
   }, []);
 
   return (
@@ -64,13 +53,12 @@ const Main: React.FC = () => {
         onClickHandler={addPost}
       />
       <PostWrapper>
-        {postList.length > 0 &&
-          postList.map(({ id, userId, title, content }: PostInfo) => (
+        {posts.length > 0 &&
+          posts.map(({ id, title, content }: PostInfo) => (
             <PostBox
               type="listItem"
               key={id}
               id={id}
-              userId={userId}
               title={title}
               content={content}
             />

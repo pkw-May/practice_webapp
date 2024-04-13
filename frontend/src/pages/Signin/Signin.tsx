@@ -10,7 +10,7 @@ import WarningLine from '../../components/WarningLine';
 import { PAGE_CONFIGS, BUTTON_CONFIGS, INPUT_CONFIGS } from './DATA';
 import styled from 'styled-components';
 
-type InputKey = 'userId' | 'password';
+type InputKey = 'email' | 'password';
 
 type InputData = Record<
   InputKey,
@@ -24,9 +24,9 @@ type InputData = Record<
 const Signin: React.FC = () => {
   const navigate = useNavigate();
   const { authenticate } = useContext(AccountContext);
-  const { validateUserId, validatePassword } = useFormValidation();
+  const { validateEmail, validatePassword } = useFormValidation();
   const [inputData, setInputData] = useState<InputData>({
-    userId: { value: '', valid: false, error: '' },
+    email: { value: '', valid: false, error: '' },
     password: { value: '', valid: false, error: '' },
   });
 
@@ -47,22 +47,27 @@ const Signin: React.FC = () => {
   };
 
   const submitUserInfo = async () => {
-    const result = await authenticate(
-      inputData.userId.value,
-      inputData.password.value,
-    );
+    try {
+      const result = await authenticate(
+        inputData.email.value,
+        inputData.password.value,
+      );
 
-    if (result) {
-      navigate('/main');
-    } else {
-      window.alert('확인되지 않는 사용자입니다.');
+      if (result) {
+        navigate('/main');
+      } else {
+        console.log(result);
+      }
+    } catch (err) {
+      console.error(err);
+      window.alert('확인되지 않는 사용자 입니다.');
     }
   };
 
   const clickSignin = async () => {
     if (
-      inputData.userId.value &&
-      inputData.userId.valid &&
+      inputData.email.value &&
+      inputData.email.valid &&
       inputData.password.value &&
       inputData.password.valid
     ) {
@@ -71,11 +76,11 @@ const Signin: React.FC = () => {
       // =======================
       submitUserInfo();
     } else {
-      const idValidation = validateUserId(inputData.userId.value);
+      const idValidation = validateEmail(inputData.email.value);
       setInputData(prev => ({
         ...prev,
-        userId: {
-          ...prev.userId,
+        email: {
+          ...prev.email,
           valid: idValidation.valid,
           error: idValidation.error,
         },

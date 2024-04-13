@@ -22,7 +22,7 @@ export const SIGNUP_BTN_CONFIG = {
 };
 
 export const INPUT_CONFIGS = [
-  { type: 'text', title: 'Email', name: 'userId' },
+  { type: 'text', title: 'Email', name: 'email' },
   { type: 'password', title: 'Password', name: 'password' },
   { type: 'password', title: 'Check Password', name: 'checkPassword' },
 ];

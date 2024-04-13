@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AccountContext } from '../../ContextAPI/AccountContext';
+import { PostsContext, PostInfo } from '../../ContextAPI/PostsContext';
+import { CommentsContext } from '../../ContextAPI/CommentsContext';
 import { Icon, Title, PostBox, Button, InputBox } from '../../components';
-import { PostInfo } from '../../components/PostBox';
 import CommentBox, { CommentInfo } from './CommentBox';
 import { PAGE_CONFIGS, COMMENT_BTN_CONFIG } from './DATA';
 import styled from 'styled-components';
@@ -11,13 +12,10 @@ const ViewPost: React.FC = () => {
   const navigate = useNavigate();
   const params = useParams();
   const { userStatus, getSession } = useContext(AccountContext);
-  const type = 'viewItem';
-  const [post, setPost] = useState<PostInfo>({
-    type: type,
-    title: '',
-    name: '',
-    content: '',
-  });
+  const { posts, getPosts } = useContext(PostsContext);
+  const { getComments } = useContext(CommentsContext);
+  const postBoxType = 'viewItem';
+
   const [comments, setComments] = useState<CommentInfo[]>([]);
   const [inputData, setInputData] = useState('');
 
@@ -41,39 +39,12 @@ const ViewPost: React.FC = () => {
     }
   };
 
-  const getPost = (id: string) => {
-    fetch(`https://jsonplaceholder.typicode.com/posts/${id}`)
-      .then(res => res.json())
-      .then(res => {
-        setPost(res);
-        getUserName(res.userId);
-      });
-  };
-
-  const getUserName = (userId: string) => {
-    fetch(`https://jsonplaceholder.typicode.com/users/${userId}`)
-      .then(res => res.json())
-      .then(res => {
-        setPost(prev => ({
-          ...prev,
-          type: type,
-          name: res.username,
-        }));
-      });
-  };
-
-  const getComments = (id: string) => {
-    fetch(`https://jsonplaceholder.typicode.com/comments?postId=${id}`)
-      .then(res => res.json())
-      .then(res => setComments(res));
-  };
-
   useEffect(() => {
     getSession();
     if (!params.id) {
       return;
     }
-    getPost(params.id);
+    getPosts(params.id);
     getComments(params.id);
   }, []);
 
@@ -90,12 +61,13 @@ const ViewPost: React.FC = () => {
       <Title title={PAGE_CONFIGS.title} />
 
       <ContentWrapper>
-        {post && (
+        {posts.length > 0 && (
           <PostBox
-            type={type}
-            title={post.title}
-            name={post.name}
-            content={post.content}
+            type={postBoxType}
+            title={posts[0].title}
+            name={posts[0].name}
+            content={posts[0].content}
+            date={posts[0].date}
           />
         )}
       </ContentWrapper>

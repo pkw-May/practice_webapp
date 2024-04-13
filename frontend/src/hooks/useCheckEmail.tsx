@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { AccountContext } from '../ContextAPI/AccountContext';
 
 const CHECK_ID_MSG = {
   EXIST: '이미 존재하는 아이디입니다.',
   NEW: '사용할 수 있는 아이디입니다.',
+  ERROR: '아이디 중복 확인에 실패했습니다.',
 };
 
 interface UserInfoResponse {
@@ -12,25 +14,26 @@ interface UserInfoResponse {
   deleted: boolean;
 }
 
-export const useCheckEmail = () => {
-  const [result, setResult] = useState<UserInfoResponse[]>([]);
-  useEffect(() => {
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then(res => res.json())
-      .then(res => setResult(res));
-  }, []);
+interface CheckEmailResponse {
+  valid: boolean;
+  message: string;
+}
 
-  const checkExist = (userEmail: string) => {
+export const useCheckEmail = () => {
+  const { checkEmail } = useContext(AccountContext);
+
+  const checkExist = async (userEmail: string): Promise<CheckEmailResponse> => {
     let valid = false;
     let message = '';
 
-    if (result.length > 0) {
-      if (result.find(item => item?.email === userEmail)) {
-        message = CHECK_ID_MSG.EXIST;
-      } else {
-        valid = true;
-        message = CHECK_ID_MSG.NEW;
-      }
+    const result = await checkEmail(userEmail);
+
+    if (result.success) {
+      valid = result.isExist ? false : true;
+      message = CHECK_ID_MSG[result.isExist ? 'EXIST' : 'NEW'];
+    } else {
+      valid = false;
+      message = CHECK_ID_MSG.ERROR;
     }
 
     return { valid, message };

@@ -16,6 +16,7 @@ export const BUTTON_CONFIGS = [
     btnName: 'Sign Up',
     btnStyle: {
       fontColor: 'skyblue',
+      bgColor: 'transparent',
       hoverBgColor: 'orange',
       hoverColor: 'white',
     },
@@ -23,6 +24,6 @@ export const BUTTON_CONFIGS = [
 ];
 
 export const INPUT_CONFIGS = [
-  { type: 'text', title: 'Email', name: 'userId' },
+  { type: 'text', title: 'Email', name: 'email' },
   { type: 'password', title: 'Password', name: 'password' },
 ];

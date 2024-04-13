@@ -1,5 +1,5 @@
-const userIdErrorMSG = {
-  EMPTY: '아이디를 작성해 주세요',
+const emailErrorMSG = {
+  EMPTY: '이메일을 작성해 주세요',
   FORMAT: '이메일 형식을 지켜주세요',
 };
 
@@ -11,15 +11,15 @@ const passwordErrorMSG = {
 };
 
 export const useFormValidation = () => {
-  const validateUserId = (userId: string) => {
+  const validateEmail = (email: string) => {
     let valid = false;
     let error = '';
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!userId) {
-      error = userIdErrorMSG.EMPTY;
-    } else if (!emailRegex.test(userId)) {
-      error = userIdErrorMSG.FORMAT;
+    if (!email) {
+      error = emailErrorMSG.EMPTY;
+    } else if (!emailRegex.test(email)) {
+      error = emailErrorMSG.FORMAT;
     } else {
       valid = true;
     }
@@ -50,7 +50,7 @@ export const useFormValidation = () => {
   };
 
   return {
-    validateUserId,
+    validateEmail,
     validatePassword,
   };
 };
