@@ -1,9 +1,21 @@
 const authService = require('../services/authService');
 
-exports.signup = async (req, res) => {
-	const { userId, password } = req.body;
+exports.checkEmailExists = async (req, res) => {
+	console.log('check Email req: ', req);
+	const { email } = req.query;
 	try {
-		const user = await authService.signup(userId, password);
+		const isExist = await authService.checkEmailExists(email);
+		res.status(200).json(isExist);
+	} catch (err) {
+		res.status(400).json({ error: err.message });
+	}
+};
+
+exports.signup = async (req, res) => {
+	console.log('server: controller signup');
+	const { userData } = req.body;
+	try {
+		const user = await authService.signup(userData);
 		res.status(201).json(user);
 	} catch (err) {
 		res.status(400).json({ error: err.message });
@@ -11,11 +23,11 @@ exports.signup = async (req, res) => {
 };
 
 exports.signin = async (req, res) => {
-	const { userId, password } = req.body;
+	const { userId } = req.body;
 	try {
-		const tokens = await authService.signin(userId, password);
-		req.json(tokens);
+		const user = await authService.signin(userId);
+		res.status(200).json(user);
 	} catch (err) {
-		res.status(401).json({ error: err.message });
+		res.status(400).json({ error: err.message });
 	}
 };

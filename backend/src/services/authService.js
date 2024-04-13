@@ -1,10 +1,28 @@
-const AWS = require('aws-sdk');
-const cognito = new AWS.CognitoIdentityServiceProvider({ region: 'MY_REGION' });
+const { createUser, checkEmailExists } = require('../models/userModel');
 
-exports.signup = async (userId, password) => {
-	// Cognito 회원가입 로직
+exports.checkEmailExists = async (email) => {
+	try {
+		const isExist = await checkEmailExists({ email });
+		return isExist;
+	} catch (err) {
+		throw new Error(err);
+	}
 };
 
-exports.signin = async (userId, password) => {
-	// Cognito 로그인 로직
+exports.signup = async (userData) => {
+	try {
+		const user = await createUser({ userData });
+		return user;
+	} catch (err) {
+		throw new Error(err);
+	}
+};
+
+exports.signin = async (userId) => {
+	try {
+		const user = await addUserId({ userId });
+		return user;
+	} catch (err) {
+		throw new Error(err);
+	}
 };
