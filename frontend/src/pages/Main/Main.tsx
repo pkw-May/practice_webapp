@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AccountContext } from '../../ContextAPI/AccountContext';
 import { PostsContext, PostInfo } from '../../ContextAPI/PostsContext';
@@ -75,6 +75,7 @@ const Wrapper = styled.div`
   ${({ theme }) => theme.flex.center};
   flex-direction: column;
   margin: auto;
+  padding-bottom: 100px;
 `;
 
 const TopBtnWrapper = styled.div`

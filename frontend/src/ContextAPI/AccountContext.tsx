@@ -1,4 +1,4 @@
-import React, { useState, createContext, ReactNode } from 'react';
+import React, { useState, createContext, ReactNode, useEffect } from 'react';
 import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 import Pool from '../UserPool';
 
@@ -110,11 +110,21 @@ const AccountProvider: React.FC<AccountProviderProps> = ({ children }) => {
     });
   };
 
+  const removeCognitoLocalStorage = () => {
+    const prefix = 'CognitoIdentityServiceProvider.';
+    for (const key of Object.keys(window.localStorage)) {
+      if (key.startsWith(prefix)) {
+        window.localStorage.removeItem(key);
+      }
+    }
+  };
+
   const logout = () => {
     const user = Pool.getCurrentUser();
     if (user) {
       setSessionJWT('');
       setUserStatus({ userSignedIn: false, userTokenCorrect: false });
+      removeCognitoLocalStorage();
       user.signOut();
     }
   };
@@ -162,6 +172,10 @@ const AccountProvider: React.FC<AccountProviderProps> = ({ children }) => {
       return false;
     }
   };
+
+  useEffect(() => {
+    getSession();
+  }, []);
 
   return (
     <AccountContext.Provider

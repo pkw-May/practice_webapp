@@ -119,6 +119,11 @@ const Content = styled.div<{ $type: PostType }>`
   font-size: 16px;
   overflow: scroll;
 
+  &:hover {
+    border-radius: ${({ theme }) => theme.radius.basic};
+    box-shadow: inset 0px -3px 4px rgba(0, 0, 0, 0.15);
+  }
+
   ${({ $type }) =>
     $type === 'listItem' &&
     css`
@@ -129,6 +134,10 @@ const Content = styled.div<{ $type: PostType }>`
       overflow: hidden;
       padding: 0;
       height: auto;
+
+      &:hover {
+        box-shadow: none;
+      }
     `}
 `;
 

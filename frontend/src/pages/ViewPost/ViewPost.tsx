@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AccountContext } from '../../ContextAPI/AccountContext';
-import { PostsContext, PostInfo } from '../../ContextAPI/PostsContext';
+import { PostsContext } from '../../ContextAPI/PostsContext';
 import { CommentsContext } from '../../ContextAPI/CommentsContext';
 import { Icon, Title, PostBox, Button, InputBox } from '../../components';
-import CommentBox, { CommentInfo } from './CommentBox';
+import CommentBox from './CommentBox';
 import { PAGE_CONFIGS, COMMENT_BTN_CONFIG } from './DATA';
 import styled from 'styled-components';
 
@@ -13,7 +13,7 @@ const ViewPost: React.FC = () => {
   const params = useParams();
   const { userStatus, getSession } = useContext(AccountContext);
   const { posts, getPosts } = useContext(PostsContext);
-  const { comments, getComments } = useContext(CommentsContext);
+  const { comments, getComments, createComment } = useContext(CommentsContext);
   const postBoxType = 'viewItem';
 
   const [inputData, setInputData] = useState('');
@@ -29,9 +29,17 @@ const ViewPost: React.FC = () => {
 
   const submitComment = () => {
     if (userStatus.userTokenCorrect) {
-      // ======================================//
-      // POST COMMENT API CALL
-      // ======================================//
+      const submitData = {
+        postId: params.id,
+        content: inputData,
+      };
+
+      if (createComment(submitData)) {
+        window.alert('댓글 등록 성공!');
+      } else {
+        window.alert('댓글 작성에 실패했습니다.');
+      }
+      window.location.reload();
     } else {
       window.alert('로그인이 필요한 기능입니다.');
       navigate('/signin');

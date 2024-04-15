@@ -4,8 +4,10 @@ import { AccountContext } from '../../ContextAPI/AccountContext';
 import { Icon, Title, Button, InputBox, InputLine } from '../../components';
 import { PAGE_CONFIGS, BUTTON_CONFIGS } from './DATA';
 import styled from 'styled-components';
+import { PostsContext } from '../../ContextAPI/PostsContext';
 
 const AddPost: React.FC = () => {
+  const { createPost } = useContext(PostsContext);
   const navigate = useNavigate();
   const [inputData, setInputData] = useState({
     title: '',
@@ -27,7 +29,18 @@ const AddPost: React.FC = () => {
   };
 
   const submitPost = () => {
-    console.log('Post Submitted');
+    const submitData = {
+      title: inputData.title,
+      content: inputData.content,
+    };
+
+    if (createPost(submitData)) {
+      window.alert('게시글이 작성되었습니다.');
+      goToList();
+    } else {
+      window.alert('게시글 작성에 실패했습니다.');
+      window.location.reload();
+    }
   };
 
   return (
