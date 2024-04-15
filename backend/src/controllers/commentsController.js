@@ -1,13 +1,12 @@
-const commentsService = require('../services/commentsService');
+const commentService = require('../services/commentService');
 
-exports.getComments = async (req, res) => {
+exports.getCommentsByPostId = async (req, res) => {
 	try {
 		const postId = req.query.postId;
 		if (!postId) {
 			res.status(200).json([]);
 		} else {
-			const comments = await commentsService.getCommentsByPostId({ postId });
-
+			const comments = await commentService.getCommentsByPostId({ postId });
 			res.status(200).json(comments);
 		}
 	} catch (error) {
@@ -18,7 +17,7 @@ exports.getComments = async (req, res) => {
 exports.createComment = async (req, res) => {
 	try {
 		const commentData = req.body;
-		const comment = await commentsService.createComment(commentData);
+		const comment = await commentService.createComment(req, commentData);
 		res.status(201).json(comment);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
@@ -31,7 +30,7 @@ exports.deleteComment = async (req, res) => {
 		if (!commentId) {
 			res.status(400).json({ message: 'commentId is required' });
 		} else {
-			const comment = await commentsService.deleteComment(commentId);
+			const comment = await commentService.deleteComment(commentId);
 			res.status(200).json(comment);
 		}
 	} catch (error) {

@@ -4,9 +4,9 @@ const {
 	createPost,
 	deletePost,
 } = require('../models/postModel');
-const { getUserById } = require('../models/userModel');
+const { getUserById, getUserByOAuthId } = require('../models/userModel');
 
-exports.getPosts = async () => {
+exports.getAllPosts = async () => {
 	try {
 		const posts = await getAllPosts();
 		return posts;
@@ -15,9 +15,9 @@ exports.getPosts = async () => {
 	}
 };
 
-exports.getPostById = async (postId) => {
+exports.getPostById = async (id) => {
 	try {
-		const post = await getPostById(postId);
+		const post = await getPostById(id);
 		post[0].date = new Date(post[0].date)
 			.toLocaleDateString('ko-KR')
 			.split('T')[0];
@@ -31,8 +31,12 @@ exports.getPostById = async (postId) => {
 	}
 };
 
-exports.createPost = async (postData) => {
+exports.createPost = async (req, postData) => {
 	try {
+		const oauthId = req.user.sub;
+		const userInfo = await getUserByOAuthId({ oauthId });
+		postData.userId = userInfo[0].id;
+
 		const post = await createPost({ postData });
 		return post;
 	} catch (error) {
@@ -40,9 +44,9 @@ exports.createPost = async (postData) => {
 	}
 };
 
-exports.deletePost = async (postId) => {
+exports.deletePost = async (id) => {
 	try {
-		const post = await deletePost(postId);
+		const post = await deletePost(id);
 		return post;
 	} catch (error) {
 		throw new Error(error);

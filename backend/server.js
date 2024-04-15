@@ -1,4 +1,4 @@
-require('dotenv').config({ path: '.env.dev' });
+require('dotenv').config({ path: '.env.local' });
 
 const express = require('express');
 const cors = require('cors');
@@ -9,13 +9,13 @@ const PORT = 8080;
 
 const app = express();
 
+app.use(cors());
 // let corsOptions = {
 // 	origin: 'https://www.domain.com',
 // 	credentials: true
 // }
 // app.use(cors(corsOptions));
 
-app.use(cors());
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);

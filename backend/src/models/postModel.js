@@ -12,10 +12,10 @@ exports.getAllPosts = () => {
 	});
 };
 
-exports.getPostById = ({ postId }) => {
+exports.getPostById = ({ id }) => {
 	return new Promise((resolve, reject) => {
 		const query = 'SELECT * FROM Posts WHERE id = ?';
-		connection.query(query, [postId], (error, result) => {
+		connection.query(query, [id], (error, result) => {
 			if (error) {
 				reject(error);
 			} else {
@@ -26,20 +26,20 @@ exports.getPostById = ({ postId }) => {
 };
 
 exports.createPost = ({ postData }) => {
-	const { title, content } = postData;
+	const { title, content, userId } = postData;
 	return new Promise((resolve, reject) => {
-		const query = 'INSERT INTO Posts (title, content) VALUES (?, ?)';
-		connection.query(query, [title, content], (error, result) => {
+		const query = 'INSERT INTO Posts (title, content, userId) VALUES (?, ?, ?)';
+		connection.query(query, [title, content, userId], (error, result) => {
 			if (error) reject(error);
 			else resolve(result);
 		});
 	});
 };
 
-exports.deletePost = ({ postId }) => {
+exports.deletePost = ({ id }) => {
 	return new Promise((resolve, reject) => {
 		const query = 'DELETE FROM Posts WHERE id = ?';
-		connection.query(query, [postId], (error, result) => {
+		connection.query(query, [id], (error, result) => {
 			if (error) reject(error);
 			else resolve(result);
 		});

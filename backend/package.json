@@ -10,10 +10,13 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.1597.0",
+    "axios": "^1.6.8",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "google-auth-library": "^9.7.0",
     "jsonwebtoken": "^9.0.2",
+    "jwk-to-pem": "^2.0.5",
     "mysql": "^2.18.1",
     "mysql2": "^3.9.4"
   }

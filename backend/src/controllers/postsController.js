@@ -1,13 +1,13 @@
-const postService = require('../services/postsService');
+const postService = require('../services/postService');
 
-exports.getPosts = async (req, res) => {
+exports.getPost = async (req, res) => {
 	try {
-		const postId = req.query.id;
-		if (!postId) {
-			const posts = await postService.getPosts();
+		const id = req.query.id;
+		if (!id) {
+			const posts = await postService.getAllPosts();
 			res.status(200).json(posts);
 		} else {
-			const post = await postService.getPostById({ postId });
+			const post = await postService.getPostById({ id });
 			res.status(200).json(post);
 		}
 	} catch (error) {
@@ -18,8 +18,8 @@ exports.getPosts = async (req, res) => {
 exports.createPost = async (req, res) => {
 	try {
 		const postData = req.body;
-		const post = await postService.createPost(postData);
-		res.status(201).json(post);
+		const newPost = await postService.createPost(req, postData);
+		res.status(201).json(newPost);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
 	}
@@ -27,11 +27,11 @@ exports.createPost = async (req, res) => {
 
 exports.deletePost = async (req, res) => {
 	try {
-		const postId = req.params?.postId;
-		if (!postId) {
+		const id = req.params?.id;
+		if (!id) {
 			res.status(400).json({ message: 'postId is required' });
 		} else {
-			const post = await postService.deletePost(postId);
+			const post = await postService.deletePost({ id });
 			res.status(200).json(post);
 		}
 	} catch (error) {

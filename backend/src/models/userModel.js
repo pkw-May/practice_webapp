@@ -27,6 +27,26 @@ exports.getAllUsers = () => {
 	});
 };
 
+exports.getUserById = ({ userId }) => {
+	return new Promise((resolve, reject) => {
+		const query = 'SELECT * FROM Users WHERE id = ?';
+		connection.query(query, [userId], (error, results) => {
+			if (error) reject(error);
+			else resolve(results);
+		});
+	});
+};
+
+exports.getUserByOAuthId = ({ oauthId }) => {
+	return new Promise((resolve, reject) => {
+		const query = 'SELECT * FROM Users WHERE oauthId = ?';
+		connection.query(query, [oauthId], (error, results) => {
+			if (error) reject(error);
+			else resolve(results);
+		});
+	});
+};
+
 exports.createUser = ({ userData }) => {
 	console.log('server: model signup, userData: ', userData);
 	const { email, oauthId } = userData;
@@ -42,16 +62,6 @@ exports.createUser = ({ userData }) => {
 			} else {
 				resolve({ success: true, id: result.insertId, ...result });
 			}
-		});
-	});
-};
-
-exports.getUserById = ({ userId }) => {
-	return new Promise((resolve, reject) => {
-		const query = 'SELECT * FROM Users WHERE id = ?';
-		connection.query(query, [userId], (error, results) => {
-			if (error) reject(error);
-			else resolve(results);
 		});
 	});
 };

@@ -17,12 +17,3 @@ exports.signup = async (userData) => {
 		throw new Error(err);
 	}
 };
-
-exports.signin = async (userId) => {
-	try {
-		const user = await addUserId({ userId });
-		return user;
-	} catch (err) {
-		throw new Error(err);
-	}
-};
