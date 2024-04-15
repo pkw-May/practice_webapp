@@ -13,14 +13,12 @@ exports.getAllPosts = () => {
 };
 
 exports.getPostById = ({ postId }) => {
-	console.log(postId);
 	return new Promise((resolve, reject) => {
 		const query = 'SELECT * FROM Posts WHERE id = ?';
 		connection.query(query, [postId], (error, result) => {
 			if (error) {
 				reject(error);
 			} else {
-				console.log(result);
 				resolve(result);
 			}
 		});

@@ -1,14 +1,17 @@
 const connection = require('../db/db');
 
-exports.getComments = ({ postId }) => {
+exports.getCommentsByPostId = ({ postId }) => {
 	return new Promise((resolve, reject) => {
-		connection.query('SELECT * FROM Posts', (error, result) => {
-			if (error) {
-				reject(error);
-			} else {
-				resolve(result);
+		connection.query(
+			'SELECT * FROM Comments WHERE postId = ?',
+			[postId],
+			(error, results) => {
+				if (error) {
+					reject(error);
+				}
+				resolve(results);
 			}
-		});
+		);
 	});
 };
 
