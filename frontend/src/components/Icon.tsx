@@ -8,6 +8,7 @@ import {
   faUser,
   faSignOut,
   faSignIn,
+  faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
 
 interface IconProps {
@@ -28,6 +29,7 @@ const iconList = {
   signin: faSignIn,
   signout: faSignOut,
   user: faUser,
+  trash: faTrashCan,
 };
 
 const Icon: React.FC<IconProps> = ({ icon, iconStyle, onClickHandler }) => {
@@ -55,9 +57,14 @@ const IconWrapper = styled.div<{ $iconStyle: IconStyle }>`
 
   color: ${({ theme, $iconStyle }) =>
     $iconStyle.color ? theme.colors[$iconStyle.color] : theme.colors.skyblue};
+  opacity: 0.7;
 
   font-size: ${({ $iconStyle }) =>
     $iconStyle.size ? `${$iconStyle.size}px` : '16px'};
 
   cursor: ${({ $iconStyle }) => ($iconStyle.disable ? 'default' : 'pointer')};
+
+  &:hover {
+    opacity: 1;
+  }
 `;

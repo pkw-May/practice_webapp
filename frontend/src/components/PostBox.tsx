@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { PostsContext } from '../ContextAPI/PostsContext';
+import Icon from './Icon';
 import styled, { css } from 'styled-components';
 
 export type PostType = 'listItem' | 'viewItem';
@@ -22,10 +24,24 @@ const PostBox: React.FC<PostInfo> = ({
   content,
   date,
 }) => {
+  const { deletePost: deletePostApi } = useContext(PostsContext);
   const navigate = useNavigate();
   const clickHandler = () => {
     if (type === 'listItem') {
       navigate(`/post/${id}`);
+    }
+  };
+
+  const deletePost = () => {
+    if (type === 'viewItem') {
+      if (window.confirm('정말 삭제하시겠습니까?')) {
+        if (deletePostApi(id)) {
+          window.alert('게시글이 삭제되었습니다.');
+          navigate('/main');
+        } else {
+          window.alert('게시글 삭제에 실패했습니다.');
+        }
+      }
     }
   };
 
@@ -36,7 +52,16 @@ const PostBox: React.FC<PostInfo> = ({
         {name && <User $type={type}>{name}</User>}
         <Content $type={type}>{content}</Content>
       </TopArea>
-      {date && <Date>{date}</Date>}
+      <BottomArea>
+        {date && <Date>{date}</Date>}
+        {type === 'viewItem' && (
+          <Icon
+            icon="trash"
+            iconStyle={{ color: 'red', size: '16', disable: false }}
+            onClickHandler={deletePost}
+          />
+        )}
+      </BottomArea>
     </Wrapper>
   );
 };
@@ -141,11 +166,13 @@ const Content = styled.div<{ $type: PostType }>`
     `}
 `;
 
+const BottomArea = styled.div`
+  height: 20%;
+  ${({ theme }) => theme.flex.between}
+  padding: 15px 0 20px 0;
+`;
+
 const Date = styled.p`
-  align-self: flex-start;
-
-  margin: 15px 0;
-
   text-align: left;
   font-size: 13px;
   color: ${({ theme }) => theme.colors.gray};

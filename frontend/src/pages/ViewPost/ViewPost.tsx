@@ -70,6 +70,7 @@ const ViewPost: React.FC = () => {
       <ContentWrapper>
         {posts.length > 0 && (
           <PostBox
+            id={posts[0].id}
             type={postBoxType}
             title={posts[0].title}
             name={posts[0].name}
@@ -94,7 +95,7 @@ const ViewPost: React.FC = () => {
       <CommentList>
         {comments.length > 0 &&
           comments.map(({ id, name, content }) => (
-            <CommentBox key={id} name={name} content={content} />
+            <CommentBox key={id} id={id} name={name} content={content} />
           ))}
       </CommentList>
     </Wrapper>

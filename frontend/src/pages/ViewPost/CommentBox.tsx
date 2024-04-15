@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { CommentsContext } from '../../ContextAPI/CommentsContext';
 import { Icon } from '../../components';
 import styled from 'styled-components';
 
@@ -9,15 +10,36 @@ export interface CommentInfo {
   content: string;
 }
 
-const CommentBox: React.FC<CommentInfo> = ({ name, content }) => {
+const CommentBox: React.FC<CommentInfo> = ({ id, name, content }) => {
+  const { deleteComment: deleteCommentApi } = useContext(CommentsContext);
+  const deleteComment = () => {
+    if (window.confirm('정말 삭제하시겠습니까?')) {
+      if (deleteCommentApi(id)) {
+        // window.alert('댓글 삭제 성공!');
+        // window.location.reload();
+      } else {
+        window.alert('댓글 삭제에 실패했습니다.');
+      }
+    }
+  };
+
   return (
     <Wrapper>
       <HeaderWrapper>
-        <Icon
-          icon="user"
-          iconStyle={{ size: '16', color: 'darkGray', disable: true }}
-        />
-        <Header>{name}</Header>
+        <LeftArea>
+          <Icon
+            icon="user"
+            iconStyle={{ size: '16', color: 'darkGray', disable: true }}
+          />
+          <Header>{name}</Header>
+        </LeftArea>
+        <RightArea>
+          <Icon
+            icon="trash"
+            iconStyle={{ size: '14', color: 'red', disable: false }}
+            onClickHandler={deleteComment}
+          />
+        </RightArea>
       </HeaderWrapper>
       <Comment>{content}</Comment>
     </Wrapper>
@@ -39,10 +61,18 @@ const Wrapper = styled.article`
 
 const HeaderWrapper = styled.div`
   width: 100%;
-  ${({ theme }) => theme.flex.left}
+  ${({ theme }) => theme.flex.between}
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkGray};
   padding-bottom: 5px;
   margin-bottom: 10px;
+`;
+
+const LeftArea = styled.div`
+  ${({ theme }) => theme.flex.left}
+`;
+
+const RightArea = styled.div`
+  ${({ theme }) => theme.flex.right}
 `;
 
 const Header = styled.h5`

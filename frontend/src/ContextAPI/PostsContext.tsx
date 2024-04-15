@@ -15,12 +15,14 @@ interface PostsContextType {
   posts: PostInfo[];
   getPosts: (id?: string) => Promise<void>;
   createPost: (post: PostInfo) => Promise<boolean>;
+  deletePost: (id: number) => Promise<boolean>;
 }
 
 const PostsContext = createContext<PostsContextType>({
   posts: [],
   getPosts: async () => {},
   createPost: async () => false,
+  deletePost: async () => false,
 });
 
 interface PostsProviderProps {
@@ -62,8 +64,32 @@ const PostsContextProvider: React.FC<PostsProviderProps> = ({ children }) => {
     }
   };
 
+  const deletePost = async (id: number) => {
+    try {
+      const response = await fetch(`${BASE_URL}/posts/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${sessionJWT}`,
+        },
+      });
+
+      if (response.status === 200) {
+        setPosts(posts.filter(post => post.id !== id));
+        return true;
+      } else if (response.status === 403) {
+        alert('권한이 없습니다.');
+        return false;
+      } else {
+        console.error('Error deleting post:', response);
+        return false;
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error);
+    }
+  };
+
   return (
-    <PostsContext.Provider value={{ posts, getPosts, createPost }}>
+    <PostsContext.Provider value={{ posts, getPosts, createPost, deletePost }}>
       {children}
     </PostsContext.Provider>
   );
