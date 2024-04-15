@@ -1,5 +1,6 @@
 // Import the necessary dependencies
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode } from 'react';
+import { AccountContext } from './AccountContext';
 import { BASE_URL } from '../config';
 
 export interface PostInfo {
@@ -27,6 +28,7 @@ interface PostsProviderProps {
 }
 
 const PostsContextProvider: React.FC<PostsProviderProps> = ({ children }) => {
+  const { sessionJWT } = useContext(AccountContext);
   const [posts, setPosts] = useState<PostInfo[]>([]);
 
   const getPosts = async (id?: string) => {
@@ -45,6 +47,7 @@ const PostsContextProvider: React.FC<PostsProviderProps> = ({ children }) => {
       const response = await fetch(`${BASE_URL}/post`, {
         method: 'POST',
         headers: {
+          Authorization: `Bearer ${sessionJWT}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(post),

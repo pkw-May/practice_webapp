@@ -5,17 +5,11 @@ import styled from 'styled-components';
 export interface CommentInfo {
   postId?: number;
   id?: number;
-  name?: string;
-  email: string;
+  name: string;
   content: string;
 }
 
-const CommentBox: React.FC<CommentInfo> = ({ email, content }) => {
-  const extractId = (email: string): string => {
-    const idx = email.search(/@/gi);
-    return email.slice(0, idx);
-  };
-
+const CommentBox: React.FC<CommentInfo> = ({ name, content }) => {
   return (
     <Wrapper>
       <HeaderWrapper>
@@ -23,7 +17,7 @@ const CommentBox: React.FC<CommentInfo> = ({ email, content }) => {
           icon="user"
           iconStyle={{ size: '16', color: 'darkGray', disable: true }}
         />
-        <Header>{extractId(email)}</Header>
+        <Header>{name}</Header>
       </HeaderWrapper>
       <Comment>{content}</Comment>
     </Wrapper>

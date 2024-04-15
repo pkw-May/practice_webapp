@@ -13,10 +13,9 @@ const ViewPost: React.FC = () => {
   const params = useParams();
   const { userStatus, getSession } = useContext(AccountContext);
   const { posts, getPosts } = useContext(PostsContext);
-  const { getComments } = useContext(CommentsContext);
+  const { comments, getComments } = useContext(CommentsContext);
   const postBoxType = 'viewItem';
 
-  const [comments, setComments] = useState<CommentInfo[]>([]);
   const [inputData, setInputData] = useState('');
 
   const updateInput = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
@@ -86,8 +85,8 @@ const ViewPost: React.FC = () => {
       </CommentInputWrapper>
       <CommentList>
         {comments.length > 0 &&
-          comments.map(({ id, email, content }) => (
-            <CommentBox key={id} email={email} content={content} />
+          comments.map(({ id, name, content }) => (
+            <CommentBox key={id} name={name} content={content} />
           ))}
       </CommentList>
     </Wrapper>
