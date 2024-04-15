@@ -26,12 +26,16 @@ exports.createComment = async (req, res) => {
 
 exports.deleteComment = async (req, res) => {
 	try {
-		const commentId = req.params?.id;
-		if (!commentId) {
-			res.status(400).json({ message: 'commentId is required' });
+		const id = req.params?.id;
+		if (!id) {
+			res.status(400).json({ message: 'comment id is required' });
 		} else {
-			const comment = await commentService.deleteComment(commentId);
-			res.status(200).json(comment);
+			const comment = await commentService.deleteComment(req, id);
+			if (!comment) {
+				res.status(403).json({ message: '삭제 권한이 없는 사용자입니다.' });
+			} else {
+				res.status(200).json(comment);
+			}
 		}
 	} catch (error) {
 		res.status(500).json({ message: error.message });

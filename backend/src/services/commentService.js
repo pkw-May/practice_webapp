@@ -1,6 +1,8 @@
 const {
 	getCommentsByPostId,
 	createComment,
+	getCommentOwnerId,
+	deleteComment,
 } = require('../models/commentsModel');
 const { getUserById, getUserByOAuthId } = require('../models/userModel');
 
@@ -27,6 +29,24 @@ exports.createComment = async (req, commentData) => {
 
 		const comment = await createComment({ commentData });
 		return comment;
+	} catch (err) {
+		throw new Error(err);
+	}
+};
+
+exports.deleteComment = async (req, id) => {
+	try {
+		const oauthId = req.user.sub;
+		const commentOwnerId = await getCommentOwnerId(id);
+		const commentOwnerOauthId = await getUserById({
+			userId: commentOwnerId[0].userId,
+		});
+		if (commentOwnerOauthId[0].oauthId !== oauthId) {
+			return false;
+		} else {
+			const comment = await deleteComment(id);
+			return comment;
+		}
 	} catch (err) {
 		throw new Error(err);
 	}

@@ -2,6 +2,7 @@ const {
 	getAllPosts,
 	getPostById,
 	createPost,
+	getPostOwnerId,
 	deletePost,
 } = require('../models/postModel');
 const { getUserById, getUserByOAuthId } = require('../models/userModel');
@@ -44,10 +45,20 @@ exports.createPost = async (req, postData) => {
 	}
 };
 
-exports.deletePost = async (id) => {
+exports.deletePost = async (req, id) => {
 	try {
-		const post = await deletePost(id);
-		return post;
+		const oauthId = req.user.sub;
+		const postOwnerId = await getPostOwnerId(id);
+		const postOwnerOauthId = await getUserById({
+			userId: postOwnerId[0].userId,
+		});
+
+		if (postOwnerOauthId[0].oauthId !== oauthId) {
+			return false;
+		} else {
+			const post = await deletePost(id);
+			return post;
+		}
 	} catch (error) {
 		throw new Error(error);
 	}

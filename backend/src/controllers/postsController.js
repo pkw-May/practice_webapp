@@ -31,8 +31,12 @@ exports.deletePost = async (req, res) => {
 		if (!id) {
 			res.status(400).json({ message: 'postId is required' });
 		} else {
-			const post = await postService.deletePost({ id });
-			res.status(200).json(post);
+			const post = await postService.deletePost(req, id);
+			if (!post) {
+				res.status(403).json({ message: '삭제 권한이 없는 사용자입니다.' });
+			} else {
+				res.status(200).json(post);
+			}
 		}
 	} catch (error) {
 		res.status(500).json({ message: error.message });
