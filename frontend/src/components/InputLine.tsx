@@ -37,6 +37,7 @@ const Wrapper = styled.div`
 const Title = styled.h5`
   ${({ theme }) => theme.fonts.button}
   margin-bottom: 3px;
+  color: ${({ theme }) => theme.colors.lightGray};
 `;
 
 const Input = styled.input`
@@ -46,6 +47,9 @@ const Input = styled.input`
   ${({ theme }) => theme.flex.left}
   border-radius: ${({ theme }) => theme.radius.basic};
   border: 1px solid ${({ theme }) => theme.colors.gray};
+  background-color: ${({ theme }) => theme.colors.bgBlack};
+
+  color: ${({ theme }) => theme.colors.white};
 
   &:focus {
     border: none;

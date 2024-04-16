@@ -47,8 +47,8 @@ const AccountContextProvider: React.FC<AccountProviderProps> = ({
       if (user) {
         user.getSession((err: any, session: any) => {
           if (err) {
-            setUserStatus(prev => ({ ...prev, userSignedIn: false }));
             console.error(err);
+            setUserStatus(prev => ({ ...prev, userSignedIn: false }));
             resolve({ userSignedIn: false, userTokenCorrect: false });
           } else {
             // check if the token is valid
@@ -88,6 +88,18 @@ const AccountContextProvider: React.FC<AccountProviderProps> = ({
         },
         onFailure: err => {
           console.error(err);
+          // check if the user is not confirmed
+          if (err.code === 'UserNotConfirmedException') {
+            // send new confirmation code to user
+            // user.resendConfirmationCode((err, result) => {
+            //   if (err) {
+            //     console.error(err);
+            //     reject(err);
+            //   } else {
+            //     console.log(result);
+            //     resolve(false);
+            //   }
+          }
           reject(err);
         },
         newPasswordRequired: data => {

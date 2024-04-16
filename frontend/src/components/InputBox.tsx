@@ -38,6 +38,7 @@ const Wrapper = styled.div`
 const Title = styled.h5`
   ${({ theme }) => theme.fonts.button}
   margin-bottom: 3px;
+  color: ${({ theme }) => theme.colors.lightGray};
 `;
 
 const Input = styled.textarea<{ $type: InputBoxType }>`
@@ -47,6 +48,9 @@ const Input = styled.textarea<{ $type: InputBoxType }>`
   ${({ theme }) => theme.flex.left}
   border-radius: ${({ theme }) => theme.radius.basic};
   border: 1px solid ${({ theme }) => theme.colors.gray};
+  background-color: ${({ theme }) => theme.colors.bgBlack};
+
+  ${({ theme }) => theme.fonts.content}
 
   &:focus {
     border: none;

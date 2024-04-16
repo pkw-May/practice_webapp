@@ -1,21 +1,22 @@
 import { css } from 'styled-components';
 
 const colors = {
-  white: '#FFFFFF',
-  lightGray: '#D9D9D9',
-  gray: '#989d9e',
-  darkGray: '#515A58',
-  orange: '#e08907',
-  skyblue: '#04acc9',
-  red: '#fa0075',
-  green: '#13bf44',
-  black: '#112c42',
+  white: 'rgb(255, 255, 255)',
+  lightGray: 'rgb(240, 240, 240)',
+  gray: 'rgb(200, 200, 200)',
+  darkGray: 'rgb(150, 150, 150)',
+  orange: 'rgb(255, 165, 0)',
+  skyblue: 'rgb(51, 215, 255)',
+  red: 'rgb(255, 51, 138)',
+  green: 'rgb(51, 255, 162)',
+  bgBlack: '#3c4756',
+  black: '#313a47',
 };
 
 const fonts = {
   title: css`
     font: 700 24px 'NotoSansKR';
-    color: ${({ theme }) => theme.colors.black};
+    color: ${({ theme }) => theme.colors.white};
   `,
   button: css`
     font: 700 18px 'NotoSansKR';
@@ -30,17 +31,17 @@ const fonts = {
   `,
   content: css`
     font: 300 16px 'NotoSansKR';
-    color: ${({ theme }) => theme.colors.black};
+    color: ${({ theme }) => theme.colors.lightGray};
   `,
   comment: css`
     font: 300 16px 'NotoSansKR';
-    color: ${({ theme }) => theme.colors.darkGray};
+    color: ${({ theme }) => theme.colors.lightGray};
   `,
 };
 
 const radius = {
-  basic: '8px',
-  round: '10px',
+  basic: '5px',
+  round: '8px',
 };
 
 const flex = {

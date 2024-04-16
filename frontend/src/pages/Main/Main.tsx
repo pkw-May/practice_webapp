@@ -1,8 +1,9 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { AccountContext } from '../../ContextAPI/AccountContext';
 import { PostsContext, PostInfo } from '../../ContextAPI/PostsContext';
+import useCallHandler from '../../hooks/useCallHandler';
 
 import { Icon, Title, Button, PostBox } from '../../components';
 import { PAGE_CONFIGS, BUTTON_CONFIGS } from './DATA';
@@ -10,8 +11,10 @@ import styled from 'styled-components';
 
 const Main: React.FC = () => {
   const navigate = useNavigate();
+  const { fetchData } = useCallHandler();
   const { userStatus, logout, getSession } = useContext(AccountContext);
   const { getPosts, posts } = useContext(PostsContext);
+  const [isLoading, setIsLoading] = useState(true);
 
   const clickProfile = () => {
     if (userStatus.userSignedIn) {
@@ -33,17 +36,36 @@ const Main: React.FC = () => {
     }
   };
 
+  const getPostList = async () => {
+    try {
+      const response = await fetchData(() => getPosts());
+      const {
+        isLoading: postIsLoading,
+        data: postResult,
+        error: postError,
+      } = response;
+      if (!postIsLoading && postResult) {
+        setIsLoading(false);
+      } else if (postError) {
+        alert(postError);
+      }
+    } catch (e) {
+      console.error(e);
+      alert(e);
+    }
+  };
+
   useEffect(() => {
     getSession();
-    getPosts();
+    getPostList();
   }, []);
 
   return (
     <Wrapper>
       <TopBtnWrapper>
         <Icon
-          icon={userStatus.userSignedIn ? 'signout' : 'signin'}
-          iconStyle={{ color: 'gray', size: '20' }}
+          icon={userStatus.userSignedIn ? 'signin' : 'signout'}
+          iconStyle={{ size: '20' }}
           onClickHandler={clickProfile}
         />
       </TopBtnWrapper>
@@ -64,6 +86,17 @@ const Main: React.FC = () => {
               content={content}
             />
           ))}
+        <EmptyArea>
+          {isLoading && (
+            <Icon icon="loading" iconStyle={{ size: '25', color: 'white' }} />
+          )}
+          {!isLoading && posts.length === 0 && (
+            <>
+              <Icon icon="sadFace" iconStyle={{ size: '25', color: 'white' }} />
+              게시글이 없습니다...ㅠㅠ
+            </>
+          )}
+        </EmptyArea>
       </PostWrapper>
     </Wrapper>
   );
@@ -72,11 +105,12 @@ const Main: React.FC = () => {
 export default Main;
 
 const Wrapper = styled.div`
-  width: 300px;
+  width: 95vw;
   ${({ theme }) => theme.flex.center};
   flex-direction: column;
   margin: auto;
   padding-bottom: 100px;
+  gap: 20px;
 `;
 
 const TopBtnWrapper = styled.div`
@@ -91,6 +125,15 @@ const PostWrapper = styled.div`
   width: 100%;
   ${({ theme }) => theme.flex.center};
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   margin-top: 30px;
+`;
+
+const EmptyArea = styled.div`
+  ${({ theme }) => theme.flex.center};
+  flex-direction: column;
+
+  gap: 5px;
+
+  ${({ theme }) => theme.fonts.content};
 `;

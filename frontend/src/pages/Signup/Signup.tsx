@@ -210,11 +210,7 @@ const Signup = () => {
   return (
     <Wrapper>
       <TopBtnWrapper>
-        <Icon
-          iconStyle={{ size: '20', color: 'gray' }}
-          icon="back"
-          onClickHandler={goBack}
-        />
+        <Icon iconStyle={{ size: '20' }} icon="back" onClickHandler={goBack} />
       </TopBtnWrapper>
       <Title {...PAGE_CONFIGS} />
 
@@ -260,7 +256,7 @@ const Signup = () => {
 export default Signup;
 
 const Wrapper = styled.div`
-  width: 300px;
+  width: 95vw;
   ${({ theme }) => theme.flex.center}
   flex-direction: column;
   margin: auto;

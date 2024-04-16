@@ -106,11 +106,7 @@ const Signin: React.FC = () => {
   return (
     <Wrapper>
       <TopBtnWrapper>
-        <Icon
-          iconStyle={{ size: '20', color: 'gray' }}
-          icon="home"
-          onClickHandler={goHome}
-        />
+        <Icon iconStyle={{ size: '20' }} icon="home" onClickHandler={goHome} />
       </TopBtnWrapper>
       <Title {...PAGE_CONFIGS} />
       {INPUT_CONFIGS.map(({ type, title, name }) => (
@@ -148,11 +144,12 @@ const Signin: React.FC = () => {
 export default Signin;
 
 const Wrapper = styled.div`
-  width: 300px;
+  width: 95vw;
 
   ${({ theme }) => theme.flex.center}
   flex-direction: column;
   margin: auto;
+  gap: 20px;
 `;
 
 const TopBtnWrapper = styled.div`

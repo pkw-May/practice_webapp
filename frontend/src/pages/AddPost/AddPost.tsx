@@ -1,12 +1,15 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PostsContext } from '../../ContextAPI/PostsContext';
+import useCallHandler from '../../hooks/useCallHandler';
 import { Icon, Title, Button, InputBox, InputLine } from '../../components';
 import { PAGE_CONFIGS, BUTTON_CONFIGS } from './DATA';
 import styled from 'styled-components';
 
 const AddPost: React.FC = () => {
   const { createPost } = useContext(PostsContext);
+  const { fetchData } = useCallHandler();
+
   const navigate = useNavigate();
   const [inputData, setInputData] = useState({
     title: '',
@@ -27,18 +30,25 @@ const AddPost: React.FC = () => {
     navigate('/main');
   };
 
-  const submitPost = () => {
+  const submitPost = async () => {
     const submitData = {
       title: inputData.title,
       content: inputData.content,
     };
 
-    if (createPost(submitData)) {
+    const response = await fetchData(() => createPost(submitData));
+    const {
+      isLoading: postIsLoading,
+      data: postResult,
+      error: postError,
+    } = response;
+
+    if (!postIsLoading && postResult) {
       window.alert('게시글이 작성되었습니다.');
       goToList();
-    } else {
-      window.alert('게시글 작성에 실패했습니다.');
-      window.location.reload();
+    } else if (postError) {
+      window.alert(postError);
+      goToList();
     }
   };
 
@@ -47,7 +57,7 @@ const AddPost: React.FC = () => {
       <TopBtnWrapper>
         <Icon
           icon="back"
-          iconStyle={{ color: 'gray', size: '20' }}
+          iconStyle={{ size: '20' }}
           onClickHandler={goToList}
         />
       </TopBtnWrapper>
@@ -73,7 +83,7 @@ const AddPost: React.FC = () => {
 export default AddPost;
 
 const Wrapper = styled.div`
-  width: 300px;
+  width: 95vw;
   ${({ theme }) => theme.flex.center}
   flex-direction: column;
   margin: auto;

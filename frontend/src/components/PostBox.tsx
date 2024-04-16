@@ -1,8 +1,10 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PostsContext } from '../ContextAPI/PostsContext';
+import useCallHandler from '../hooks/useCallHandler';
 import Icon from './Icon';
 import styled, { css } from 'styled-components';
+import AvatarIcon from './AvatarIcon';
 
 export type PostType = 'listItem' | 'viewItem';
 
@@ -25,6 +27,7 @@ const PostBox: React.FC<PostInfo> = ({
   date,
 }) => {
   const { deletePost: deletePostApi } = useContext(PostsContext);
+  const { fetchData } = useCallHandler();
   const navigate = useNavigate();
   const clickHandler = () => {
     if (type === 'listItem') {
@@ -32,14 +35,21 @@ const PostBox: React.FC<PostInfo> = ({
     }
   };
 
-  const deletePost = () => {
+  const deletePost = async () => {
     if (type === 'viewItem') {
       if (window.confirm('정말 삭제하시겠습니까?')) {
-        if (deletePostApi(id)) {
+        const response = await fetchData(() => deletePostApi(id));
+        const {
+          isLoading: deleteIsLoading,
+          data: deleteResult,
+          error: deleteError,
+        } = response;
+
+        if (!deleteIsLoading && deleteResult) {
           window.alert('게시글이 삭제되었습니다.');
           navigate('/main');
-        } else {
-          window.alert('게시글 삭제에 실패했습니다.');
+        } else if (deleteError) {
+          window.alert(deleteError);
         }
       }
     }
@@ -48,8 +58,13 @@ const PostBox: React.FC<PostInfo> = ({
   return (
     <Wrapper $type={type} onClick={clickHandler}>
       <TopArea>
+        {name && (
+          <UserArea $type={type}>
+            <AvatarIcon name={name} size="18px" />
+            {name}
+          </UserArea>
+        )}
         <Header $type={type}>{title}</Header>
-        {name && <User $type={type}>{name}</User>}
         <Content $type={type}>{content}</Content>
       </TopArea>
       <BottomArea>
@@ -79,7 +94,7 @@ const Wrapper = styled.article<{ $type: PostType }>`
   padding: 16px 20px;
   margin-bottom: 3px;
 
-  border: 1px solid ${({ theme }) => theme.colors.gray};
+  background-color: ${({ theme }) => theme.colors.bgBlack};
   border-radius: ${({ theme }) => theme.radius.basic};
 
   cursor: default;
@@ -88,7 +103,8 @@ const Wrapper = styled.article<{ $type: PostType }>`
     $type === 'listItem' &&
     css`
       height: 128px;
-      border-color: ${({ theme }) => theme.colors.lightGray};
+      border-bottom: 1px solid ${({ theme }) => theme.colors.darkGray};
+
       cursor: pointer;
       &:hover {
         border: none;
@@ -108,6 +124,7 @@ const Header = styled.h5<{ $type: PostType }>`
   text-align: left;
   ${({ theme }) => theme.fonts.title}
   font-size: 18px;
+  margin-bottom: 20px;
 
   ${({ $type }) =>
     $type === 'listItem' &&
@@ -120,13 +137,17 @@ const Header = styled.h5<{ $type: PostType }>`
     `}
 `;
 
-const User = styled.p<{ $type: PostType }>`
-  align-self: flex-end;
-  margin: 15px 0px 25px 0px;
+const UserArea = styled.p<{ $type: PostType }>`
+  ${({ theme }) => theme.flex.center}
+  align-self: flex-start;
+
+  gap: 7px;
+
+  margin-bottom: 25px;
 
   text-align: right;
   font-size: 14px;
-  color: ${({ theme }) => theme.colors.darkGray};
+  color: ${({ theme }) => theme.colors.gray};
 
   ${({ $type }) =>
     $type === 'listItem' &&
@@ -143,11 +164,6 @@ const Content = styled.div<{ $type: PostType }>`
   text-align: left;
   font-size: 16px;
   overflow: scroll;
-
-  &:hover {
-    border-radius: ${({ theme }) => theme.radius.basic};
-    box-shadow: inset 0px -3px 4px rgba(0, 0, 0, 0.15);
-  }
 
   ${({ $type }) =>
     $type === 'listItem' &&
@@ -167,9 +183,9 @@ const Content = styled.div<{ $type: PostType }>`
 `;
 
 const BottomArea = styled.div`
-  height: 20%;
+  height: 10%;
   ${({ theme }) => theme.flex.between}
-  padding: 15px 0 20px 0;
+  padding: 15px 0 10px 0;
 `;
 
 const Date = styled.p`

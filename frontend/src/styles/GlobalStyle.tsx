@@ -12,7 +12,7 @@ ${reset}
 
   body{
     font-family: 'NotoSansKR', sans-serif;
-    background-color: ${theme.colors.white};
+    background-color: ${theme.colors.black};
 
     &::-webkit-scrollbar {
     display: none;

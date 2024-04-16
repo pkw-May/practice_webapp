@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp as AwesomeProp } from '@fortawesome/fontawesome-svg-core';
 import {
@@ -9,6 +9,8 @@ import {
   faUserXmark,
   faUserCheck,
   faTrashCan,
+  faSadTear,
+  faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
 
 interface IconProps {
@@ -30,6 +32,8 @@ const iconList = {
   signout: faUserXmark,
   user: faUser,
   trash: faTrashCan,
+  sadFace: faSadTear,
+  loading: faSpinner,
 };
 
 const Icon: React.FC<IconProps> = ({ icon, iconStyle, onClickHandler }) => {
@@ -55,9 +59,8 @@ const IconWrapper = styled.div<{ $iconStyle: IconStyle }>`
   width: auto;
   padding: 5px;
 
-  color: ${({ theme, $iconStyle }) =>
-    $iconStyle.color ? theme.colors[$iconStyle.color] : theme.colors.skyblue};
-  opacity: 0.7;
+  color: ${({ theme }) => theme.colors.gray};
+  opacity: 1;
 
   font-size: ${({ $iconStyle }) =>
     $iconStyle.size ? `${$iconStyle.size}px` : '16px'};
@@ -65,6 +68,13 @@ const IconWrapper = styled.div<{ $iconStyle: IconStyle }>`
   cursor: ${({ $iconStyle }) => ($iconStyle.disable ? 'default' : 'pointer')};
 
   &:hover {
-    opacity: 1;
+    color: ${({ theme, $iconStyle }) =>
+      $iconStyle.color ? theme.colors[$iconStyle.color] : theme.colors.orange};
   }
+
+  ${({ $iconStyle }) =>
+    $iconStyle.disable &&
+    css`
+      pointer-events: none;
+    `}
 `;

@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { AccountContext } from './AccountContext';
 import { commentsService } from '../apis/commentsService';
-
+import { AxiosResponse } from 'axios';
 export interface CommentInfo {
   id?: number;
   postId?: string;
@@ -12,16 +12,16 @@ export interface CommentInfo {
 
 interface CommentsContextType {
   comments: CommentInfo[];
-  getComments: (id?: string) => Promise<void>;
-  createComment: (post: CommentInfo) => Promise<boolean>;
-  deleteComment: (id: number) => Promise<boolean>;
+  getComments: (id?: string) => Promise<AxiosResponse>;
+  createComment: (post: CommentInfo) => Promise<AxiosResponse>;
+  deleteComment: (id: number) => Promise<AxiosResponse>;
 }
 
 const CommentsContext = createContext<CommentsContextType>({
   comments: [],
-  getComments: async () => {},
-  createComment: async () => false,
-  deleteComment: async () => false,
+  getComments: async () => null,
+  createComment: async () => null,
+  deleteComment: async () => null,
 });
 
 interface CommentsProviderProps {
@@ -39,43 +39,53 @@ const CommentsContextProvider: React.FC<CommentsProviderProps> = ({
     try {
       const response = await commentsService.getComments(id);
       setComments(response.data);
+      return response;
     } catch (error) {
       console.error('Error fetching posts:', error);
+      throw new Error(error);
     }
   };
 
   const createComment = async (commentData: CommentInfo) => {
+    if (!sessionJWT) {
+      throw new Error('로그인이 필요한 기능입니다.');
+    }
+
     try {
       const response = await commentsService.createComment(
         commentData,
         sessionJWT,
       );
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         setComments([...comments, response.data]);
-        return true;
-      } else {
-        return false;
+        return response;
       }
     } catch (error) {
       console.error('Error creating comment:', error);
+      return error;
     }
   };
 
   const deleteComment = async (id: number) => {
+    if (!sessionJWT) {
+      throw new Error('로그인이 필요한 기능입니다.');
+    }
+
     try {
       const response = await commentsService.deleteComment(id, sessionJWT);
+
       if (response.status === 200) {
         setComments(comments.filter(comment => comment.id !== id));
-        return true;
-      } else if (response.status === 403) {
-        alert('권한이 없습니다.');
-        return false;
-      } else {
-        return false;
+        return response;
       }
     } catch (error) {
       console.error('Error deleting comment:', error);
+      if (error.response.status === 403) {
+        throw new Error('권한이 없습니다.');
+      } else {
+        throw new Error('댓글 삭제에 실패했습니다.');
+      }
     }
   };
 
