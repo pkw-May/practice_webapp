@@ -7,11 +7,13 @@ interface InputBoxProps {
   name: string;
   onChangeHandler: (e: React.ChangeEvent<HTMLTextAreaElement>) => void | any;
   title?: string;
+  value?: string;
 }
 
 const InputBox: React.FC<InputBoxProps> = ({
   type,
   name,
+  value,
   onChangeHandler,
   title,
 }: InputBoxProps) => {
@@ -22,6 +24,7 @@ const InputBox: React.FC<InputBoxProps> = ({
         onChange={e => {
           onChangeHandler(e);
         }}
+        value={value}
         name={name}
         $type={type}
       />

@@ -49,14 +49,14 @@ const ViewPost: React.FC = () => {
 
     if (!isPostCommentLoading && postCommentResult) {
       window.alert('댓글 등록 성공!');
+      setInputData('');
     } else if (postCommentError) {
       window.alert(postCommentError);
       if (postCommentError === '로그인이 필요한 기능입니다.') {
         navigate('/signin');
       }
     }
-    window.location.reload();
-    setIsCommentsLoading(false);
+    await callCommentList(params.id);
   };
 
   const callPostData = async id => {
@@ -132,6 +132,7 @@ const ViewPost: React.FC = () => {
       <CommentInputWrapper>
         <InputBox
           onChangeHandler={updateInput}
+          value={inputData}
           type="comment"
           name={PAGE_CONFIGS.inputContent.name}
         />

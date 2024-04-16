@@ -81,7 +81,6 @@ const Signup = () => {
           email: {
             ...prev.email,
             checked: valid,
-            valid: valid,
             error: message,
           },
         }));
@@ -93,7 +92,6 @@ const Signup = () => {
         email: {
           ...prev.email,
           checked: valid,
-          valid: valid,
           error: message,
         },
       }));
@@ -107,10 +105,11 @@ const Signup = () => {
         ...prev,
         email: {
           ...prev.email,
-          valid: false,
+          checked: false,
           error: '아이디 중복을 확인해 주세요.',
         },
       }));
+      return;
     }
 
     if (!inputData.email.valid) {
@@ -123,8 +122,8 @@ const Signup = () => {
           error: error,
         },
       }));
-      if (!inputData.email.checked) {
-        checkId();
+      if (!valid) {
+        return;
       }
     }
 
@@ -138,6 +137,9 @@ const Signup = () => {
           error: error,
         },
       }));
+      if (!valid) {
+        return;
+      }
     }
 
     if (inputData.password.value !== inputData.checkPassword.value) {
@@ -149,6 +151,7 @@ const Signup = () => {
           error: '비밀번호가 일치하지 않습니다.',
         },
       }));
+      return;
     } else {
       setInputData(prev => ({
         ...prev,
@@ -160,9 +163,22 @@ const Signup = () => {
       }));
     }
 
+    if (!inputData.email.checked) {
+      setInputData(prev => ({
+        ...prev,
+        email: {
+          ...prev.email,
+          checked: false,
+          error: '아이디 중복을 확인해 주세요.',
+        },
+      }));
+      return;
+    }
+
     if (
       inputData.email.valid &&
       inputData.email.value &&
+      inputData.email.checked &&
       inputData.password.valid &&
       inputData.password.value &&
       inputData.checkPassword.valid &&
@@ -223,7 +239,7 @@ const Signup = () => {
         <Button {...CHECK_BTN_CONFIG} onClickHandler={checkId} />
         {inputData[INPUT_CONFIGS[0].name as InputKey].error && (
           <WarningLine
-            isInfo={inputData[INPUT_CONFIGS[0].name as InputKey].valid}
+            isInfo={inputData[INPUT_CONFIGS[0].name as InputKey].checked}
             warning={inputData[INPUT_CONFIGS[0].name as InputKey].error}
           />
         )}
