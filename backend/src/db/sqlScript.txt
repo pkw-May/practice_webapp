@@ -4,7 +4,7 @@ USE jungle_test;
 
 CREATE TABLE Users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    oauthId INT,
+    oauthId VARCHAR(255),
     colorCode VARCHAR(100),
     email VARCHAR(255) NOT NULL,
     name VARCHAR(100),
@@ -13,8 +13,9 @@ CREATE TABLE Users (
 
 CREATE TABLE Posts (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    title TEXT NOT NULL,
     content TEXT NOT NULL,
-    date DATETIME,
+    date DATETIME DEFAULT CURRENT_TIMESTAMP,
     deleted BOOLEAN DEFAULT FALSE,
     userId INT,
     FOREIGN KEY (userId) REFERENCES Users(id)
