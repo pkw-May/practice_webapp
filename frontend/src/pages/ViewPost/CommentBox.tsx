@@ -7,11 +7,17 @@ import styled from 'styled-components';
 export interface CommentInfo {
   postId?: number;
   id?: number;
+  colorCode?: string;
   name: string;
   content: string;
 }
 
-const CommentBox: React.FC<CommentInfo> = ({ id, name, content }) => {
+const CommentBox: React.FC<CommentInfo> = ({
+  id,
+  name,
+  colorCode,
+  content,
+}) => {
   const { fetchData } = useCallHandler();
   const { deleteComment: deleteCommentApi } = useContext(CommentsContext);
   const deleteComment = async () => {
@@ -29,7 +35,7 @@ const CommentBox: React.FC<CommentInfo> = ({ id, name, content }) => {
   return (
     <Wrapper>
       <LeftArea>
-        <AvatarIcon name={name} size="30px" />
+        <AvatarIcon name={name} colorCode={colorCode} size="30px" />
       </LeftArea>
       <RightArea>
         <HeaderWrapper>

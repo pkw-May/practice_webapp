@@ -145,8 +145,14 @@ const ViewPost: React.FC = () => {
         )}
         {!isCommentsLoading &&
           comments.length > 0 &&
-          comments.map(({ id, name, content }) => (
-            <CommentBox key={id} id={id} name={name} content={content} />
+          comments.map(({ id, name, colorCode, content }) => (
+            <CommentBox
+              key={id}
+              id={id}
+              name={name}
+              colorCode={colorCode}
+              content={content}
+            />
           ))}
         {!isCommentsLoading && comments.length === 0 && (
           <EmptyArea>

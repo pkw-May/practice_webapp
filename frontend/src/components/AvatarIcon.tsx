@@ -3,12 +3,12 @@ import styled from 'styled-components';
 
 interface AvatarIconProps {
   name: string;
+  colorCode: string;
   size: string;
 }
 
-const AvatarIcon: React.FC<AvatarIconProps> = ({ name, size }) => {
-  const randomColor = Math.floor(Math.random() * 16777215).toString(16);
-  const avatarUrl = `https://ui-avatars.com/api/?name=${name}&background=${randomColor}&bold=true&color=ffffff&size=512`;
+const AvatarIcon: React.FC<AvatarIconProps> = ({ name, colorCode, size }) => {
+  const avatarUrl = `https://ui-avatars.com/api/?name=${name}&background=${colorCode}&bold=true&color=ffffff&size=512`;
   return <Avatar src={avatarUrl} size={size} />;
 };
 

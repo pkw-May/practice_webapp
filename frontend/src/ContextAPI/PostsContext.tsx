@@ -7,6 +7,7 @@ export interface PostInfo {
   id?: number;
   title: string;
   content: string;
+  colorCode?: string;
   name?: string;
   date?: string;
 }

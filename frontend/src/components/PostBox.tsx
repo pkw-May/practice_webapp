@@ -12,6 +12,7 @@ export interface PostInfo {
   type: PostType;
   id?: number;
   userId?: number;
+  colorCode?: string;
   title: string;
   content: string;
   name?: string | any;
@@ -22,6 +23,7 @@ const PostBox: React.FC<PostInfo> = ({
   type,
   id,
   name,
+  colorCode,
   title,
   content,
   date,
@@ -58,9 +60,9 @@ const PostBox: React.FC<PostInfo> = ({
   return (
     <Wrapper $type={type} onClick={clickHandler}>
       <TopArea>
-        {name && (
+        {name && colorCode && (
           <UserArea $type={type}>
-            <AvatarIcon name={name} size="18px" />
+            <AvatarIcon name={name} colorCode={colorCode} size="18px" />
             {name}
           </UserArea>
         )}

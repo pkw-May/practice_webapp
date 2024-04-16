@@ -7,6 +7,7 @@ export interface CommentInfo {
   postId?: string;
   content: string;
   name?: string;
+  colorCode?: string;
   date?: Date;
 }
 

@@ -14,7 +14,7 @@ const checkEmail = async (email: string) => {
 };
 
 const insertNewUser = async (userData: DataForUserCreation) => {
-  return API.post('/auth/signup', userData);
+  return API.post('/auth/signup', { userData });
 };
 
 export const authService = {
