@@ -1,6 +1,6 @@
-CREATE DATABASE jungleTest;
+CREATE DATABASE jungle_test;
 
-USE jungleTest;
+USE jungle_test;
 
 CREATE TABLE Users (
     id INT AUTO_INCREMENT PRIMARY KEY,
