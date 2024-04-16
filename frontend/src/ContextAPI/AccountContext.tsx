@@ -1,6 +1,7 @@
 import React, { useState, createContext, ReactNode, useEffect } from 'react';
 import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 import Pool from '../UserPool';
+import { BASE_URL } from '../config';
 
 interface UserStatus {
   userSignedIn: boolean;
@@ -133,7 +134,7 @@ const AccountProvider: React.FC<AccountProviderProps> = ({ children }) => {
     let result = { success: false, isExist: false };
     try {
       const response = await fetch(
-        `http://localhost:8080/api/auth/checkEmail?email=${email}`,
+        `${BASE_URL}/auth/checkEmail?email=${email}`,
       );
       const isExist = await response.json();
 
@@ -153,7 +154,7 @@ const AccountProvider: React.FC<AccountProviderProps> = ({ children }) => {
     userData: DataForUserCreation,
   ): Promise<boolean> => {
     try {
-      const response = await fetch('http://localhost:8080/api/auth/signup', {
+      const response = await fetch(`${BASE_URL}/auth/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,4 +1,3 @@
-// Import the necessary dependencies
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { AccountContext } from './AccountContext';
 import { BASE_URL } from '../config';

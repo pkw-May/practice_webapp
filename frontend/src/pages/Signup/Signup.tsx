@@ -50,7 +50,6 @@ const Signup = () => {
   };
 
   const checkId = async () => {
-    console.log('check id!');
     if (!inputData.email.valid) {
       const { valid, error } = validateEmail(inputData.email.value);
       setInputData(prev => ({
@@ -88,6 +87,65 @@ const Signup = () => {
   };
 
   const submitData = async (e: React.MouseEvent<HTMLButtonElement> | any) => {
+    e.preventDefault();
+    if (inputData.email.valid && !inputData.email.checked) {
+      setInputData(prev => ({
+        ...prev,
+        email: {
+          ...prev.email,
+          valid: false,
+          error: '아이디 중복을 확인해 주세요.',
+        },
+      }));
+    }
+
+    if (!inputData.email.valid) {
+      const { valid, error } = validateEmail(inputData.email.value);
+      setInputData(prev => ({
+        ...prev,
+        email: {
+          ...prev.email,
+          valid: valid,
+          error: error,
+        },
+      }));
+      if (!inputData.email.checked) {
+        checkId();
+      }
+    }
+
+    if (!inputData.password.valid) {
+      const { valid, error } = validatePassword(inputData.password.value);
+      setInputData(prev => ({
+        ...prev,
+        password: {
+          ...prev.password,
+          valid: valid,
+          error: error,
+        },
+      }));
+    }
+
+    if (inputData.password.value !== inputData.checkPassword.value) {
+      setInputData(prev => ({
+        ...prev,
+        checkPassword: {
+          ...prev.checkPassword,
+          valid: false,
+          error: '비밀번호가 일치하지 않습니다.',
+        },
+      }));
+    } else {
+      setInputData(prev => ({
+        ...prev,
+        checkPassword: {
+          ...prev.checkPassword,
+          valid: true,
+          error: '',
+        },
+      }));
+    }
+
     if (
       inputData.email.valid &&
       inputData.email.value &&
@@ -96,9 +154,6 @@ const Signup = () => {
       inputData.checkPassword.valid &&
       inputData.checkPassword.value
     ) {
-      // ======================================//
-      /** ✨✨✨--- REDUX & 에러 핸들링 ---✨✨✨ */
-
       const { email, password } = inputData;
       UserPool.signUp(email.value, password.value, [], [], (err, data) => {
         if (err) {
@@ -117,66 +172,6 @@ const Signup = () => {
           }
         }
       });
-      // ======================================//
-    } else {
-      if (inputData.email.valid && !inputData.email.checked) {
-        setInputData(prev => ({
-          ...prev,
-          email: {
-            ...prev.email,
-            valid: false,
-            error: '아이디 중복을 확인해 주세요.',
-          },
-        }));
-      }
-
-      if (!inputData.email.valid) {
-        const { valid, error } = validateEmail(inputData.email.value);
-        setInputData(prev => ({
-          ...prev,
-          email: {
-            ...prev.email,
-            valid: valid,
-            error: error,
-          },
-        }));
-        if (!inputData.email.checked) {
-          window.alert('아이디 중복 확인을 먼저 진행합니다.');
-          checkId();
-        }
-      }
-
-      if (!inputData.password.valid) {
-        const { valid, error } = validatePassword(inputData.password.value);
-        setInputData(prev => ({
-          ...prev,
-          password: {
-            ...prev.password,
-            valid: valid,
-            error: error,
-          },
-        }));
-      }
-
-      if (inputData.password.value !== inputData.checkPassword.value) {
-        setInputData(prev => ({
-          ...prev,
-          checkPassword: {
-            ...prev.checkPassword,
-            valid: false,
-            error: '비밀번호가 일치하지 않습니다.',
-          },
-        }));
-      } else {
-        setInputData(prev => ({
-          ...prev,
-          checkPassword: {
-            ...prev.checkPassword,
-            valid: true,
-            error: '',
-          },
-        }));
-      }
     }
   };
 
@@ -228,16 +223,10 @@ const Signup = () => {
       <CheckWrapper>
         <InputLine
           key={INPUT_CONFIGS[0].name}
-          type={INPUT_CONFIGS[0].type}
-          title={INPUT_CONFIGS[0].title}
-          name={INPUT_CONFIGS[0].name}
+          {...INPUT_CONFIGS[0]}
           onChangeHandler={updateInput}
         />
-        <Button
-          btnName={CHECK_BTN_CONFIG.btnName}
-          btnStyle={CHECK_BTN_CONFIG.btnStyle}
-          onClickHandler={checkId}
-        />
+        <Button {...CHECK_BTN_CONFIG} onClickHandler={checkId} />
         {inputData[INPUT_CONFIGS[0].name as InputKey].error && (
           <WarningLine
             isInfo={inputData[INPUT_CONFIGS[0].name as InputKey].valid}
@@ -265,11 +254,7 @@ const Signup = () => {
         );
       })}
 
-      <Button
-        btnName={SIGNUP_BTN_CONFIG.btnName}
-        btnStyle={SIGNUP_BTN_CONFIG.btnStyle}
-        onClickHandler={submitData}
-      />
+      <Button {...SIGNUP_BTN_CONFIG} onClickHandler={submitData} />
     </Wrapper>
   );
 };
