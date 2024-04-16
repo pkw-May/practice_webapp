@@ -121,7 +121,7 @@ const ViewPost: React.FC = () => {
       <ContentWrapper>
         {isPostLoading && (
           <EmptyArea>
-            <Icon icon="loading" iconStyle={{ size: '25' }} />
+            <Icon icon="loading" iconStyle={{ size: '25', disable: true }} />
           </EmptyArea>
         )}
         {!isPostLoading && posts.length > 0 && (
@@ -141,7 +141,7 @@ const ViewPost: React.FC = () => {
       <CommentList>
         {isCommentsLoading && (
           <EmptyArea>
-            <Icon icon="loading" iconStyle={{ size: '25' }} />
+            <Icon icon="loading" iconStyle={{ size: '25', disable: true }} />
           </EmptyArea>
         )}
         {!isCommentsLoading &&
@@ -157,7 +157,10 @@ const ViewPost: React.FC = () => {
           ))}
         {!isCommentsLoading && comments.length === 0 && (
           <EmptyArea>
-            <Icon icon="sadFace" iconStyle={{ size: '25', color: 'white' }} />
+            <Icon
+              icon="sadFace"
+              iconStyle={{ size: '25', color: 'white', disable: true }}
+            />
             아직 댓글이 없습니다...ㅠㅠ
           </EmptyArea>
         )}

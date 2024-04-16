@@ -88,11 +88,17 @@ const Main: React.FC = () => {
           ))}
         <EmptyArea>
           {isLoading && (
-            <Icon icon="loading" iconStyle={{ size: '25', color: 'white' }} />
+            <Icon
+              icon="loading"
+              iconStyle={{ size: '25', color: 'white', disable: true }}
+            />
           )}
           {!isLoading && posts.length === 0 && (
             <>
-              <Icon icon="sadFace" iconStyle={{ size: '25', color: 'white' }} />
+              <Icon
+                icon="sadFace"
+                iconStyle={{ size: '25', color: 'white', disable: true }}
+              />
               게시글이 없습니다...ㅠㅠ
             </>
           )}
