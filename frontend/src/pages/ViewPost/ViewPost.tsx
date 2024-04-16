@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AccountContext } from '../../ContextAPI/AccountContext';
-import { PostsContext } from '../../ContextAPI/PostsContext';
-import { CommentsContext } from '../../ContextAPI/CommentsContext';
+import {
+  AccountContext,
+  PostsContext,
+  CommentsContext,
+} from '../../ContextAPI';
 import { Icon, Title, PostBox, Button, InputBox } from '../../components';
 import CommentBox from './CommentBox';
 import { PAGE_CONFIGS, COMMENT_BTN_CONFIG } from './DATA';
@@ -68,16 +70,7 @@ const ViewPost: React.FC = () => {
       <Title title={PAGE_CONFIGS.title} />
 
       <ContentWrapper>
-        {posts.length > 0 && (
-          <PostBox
-            id={posts[0].id}
-            type={postBoxType}
-            title={posts[0].title}
-            name={posts[0].name}
-            content={posts[0].content}
-            date={posts[0].date}
-          />
-        )}
+        {posts.length > 0 && <PostBox type={postBoxType} {...posts[0]} />}
       </ContentWrapper>
 
       <CommentInputWrapper>
@@ -86,11 +79,7 @@ const ViewPost: React.FC = () => {
           type="comment"
           name={PAGE_CONFIGS.inputContent.name}
         />
-        <Button
-          btnName={COMMENT_BTN_CONFIG.btnName}
-          btnStyle={COMMENT_BTN_CONFIG.btnStyle}
-          onClickHandler={submitComment}
-        />
+        <Button {...COMMENT_BTN_CONFIG} onClickHandler={submitComment} />
       </CommentInputWrapper>
       <CommentList>
         {comments.length > 0 &&

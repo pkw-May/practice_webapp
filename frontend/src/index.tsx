@@ -1,9 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import Router from './Router';
-import { AccountProvider } from './ContextAPI/AccountContext';
-import { PostsContextProvider } from './ContextAPI/PostsContext';
-import { CommentsContextProvider } from './ContextAPI/CommentsContext';
+
+import {
+  AccountContextProvider,
+  PostsContextProvider,
+  CommentsContextProvider,
+} from './ContextAPI';
+
 import GlobalStyle from './styles/GlobalStyle';
 import theme from './styles/theme';
 import { ThemeProvider } from 'styled-components';
@@ -16,13 +20,13 @@ root.render(
   <>
     <GlobalStyle />
     <ThemeProvider theme={theme}>
-      <AccountProvider>
+      <AccountContextProvider>
         <PostsContextProvider>
           <CommentsContextProvider>
             <Router />
           </CommentsContextProvider>
         </PostsContextProvider>
-      </AccountProvider>
+      </AccountContextProvider>
     </ThemeProvider>
   </>,
 );

@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCheckEmail } from '../../hooks/useCheckEmail';
-import UserPool from '../../UserPool';
 import { useFormValidation } from '../../hooks/useFormValidation';
+import { useCreateUser, DataForUserCreation } from '../../hooks/useCreateUser';
 import { Icon, Title, InputLine, Button, WarningLine } from '../../components';
 import {
   CHECK_BTN_CONFIG,
@@ -27,13 +27,14 @@ const Signup = () => {
   const navigate = useNavigate();
   const { checkExist } = useCheckEmail();
   const { validateEmail, validatePassword } = useFormValidation();
-  const [inputData, setInputData] = useState({
+  const { callCognitoSignUp } = useCreateUser();
+
+  const [inputData, setInputData] = useState<InputData>({
     username: { value: '', valid: false, error: '' },
     email: { value: '', valid: false, checked: false, error: '' },
     password: { value: '', valid: false, error: '' },
     checkPassword: { value: '', valid: false, error: '' },
   });
-  const { title } = PAGE_CONFIGS;
 
   const updateInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const key = e.target.name as InputKey;
@@ -47,6 +48,19 @@ const Signup = () => {
 
   const goBack = () => {
     navigate('/signin');
+  };
+
+  const afterCallSignUp = (
+    result: boolean,
+    dataForUserCreation?: DataForUserCreation,
+  ) => {
+    if (result) {
+      navigate('/signup/confirm', {
+        state: { dataForUserCreation },
+      });
+    } else {
+      alert('회원가입에 실패했습니다.');
+    }
   };
 
   const checkId = async () => {
@@ -155,23 +169,7 @@ const Signup = () => {
       inputData.checkPassword.value
     ) {
       const { email, password } = inputData;
-      UserPool.signUp(email.value, password.value, [], [], (err, data) => {
-        if (err) {
-          console.error(err);
-          window.alert(err.message);
-        } else {
-          if (data) {
-            const dataForUserCreation = {
-              email: data.user.getUsername(),
-              oauthId: data.userSub,
-            };
-
-            navigate('/signup/confirm', {
-              state: { dataForUserCreation },
-            });
-          }
-        }
-      });
+      callCognitoSignUp(email.value, password.value, afterCallSignUp);
     }
   };
 
@@ -218,7 +216,7 @@ const Signup = () => {
           onClickHandler={goBack}
         />
       </TopBtnWrapper>
-      <Title title={title} />
+      <Title {...PAGE_CONFIGS} />
 
       <CheckWrapper>
         <InputLine

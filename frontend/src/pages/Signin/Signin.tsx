@@ -1,12 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AccountContext } from '../../ContextAPI/AccountContext';
 import { useFormValidation } from '../../hooks/useFormValidation';
-import Icon from '../../components/Icon';
-import Title from '../../components/Title';
-import Button from '../../components/Button';
-import InputLine from '../../components/InputLine';
-import WarningLine from '../../components/WarningLine';
+import { Icon, Title, Button, InputLine, WarningLine } from '../../components';
 import { PAGE_CONFIGS, BUTTON_CONFIGS, INPUT_CONFIGS } from './DATA';
 import styled from 'styled-components';
 
@@ -29,8 +25,6 @@ const Signin: React.FC = () => {
     email: { value: '', valid: false, error: '' },
     password: { value: '', valid: false, error: '' },
   });
-
-  const { title } = PAGE_CONFIGS;
 
   const goHome = (): void => {
     navigate('/main');
@@ -56,7 +50,8 @@ const Signin: React.FC = () => {
       if (result) {
         navigate('/main');
       } else {
-        console.log(result);
+        console.error(result);
+        window.alert('로그인 과정에서 에러가 발생했습니다.');
       }
     } catch (err) {
       console.error(err);
@@ -71,10 +66,7 @@ const Signin: React.FC = () => {
       inputData.password.value &&
       inputData.password.valid
     ) {
-      // =======================
-      // REDUX!!!!!
-      // =======================
-      submitUserInfo();
+      await submitUserInfo();
     } else {
       const idValidation = validateEmail(inputData.email.value);
       setInputData(prev => ({
@@ -120,7 +112,7 @@ const Signin: React.FC = () => {
           onClickHandler={goHome}
         />
       </TopBtnWrapper>
-      <Title title={title} />
+      <Title {...PAGE_CONFIGS} />
       {INPUT_CONFIGS.map(({ type, title, name }) => (
         <InputWrapper key={name}>
           <InputLine

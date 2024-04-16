@@ -5,7 +5,7 @@ const emailErrorMSG = {
 
 const passwordErrorMSG = {
   EMPTY: '비밀번호를 작성해 주세요',
-  LENGTH: '4자 이상 작성해주세요',
+  LENGTH: '8자 이상 작성해주세요',
   ADD_NUM: '숫자를 하나 이상 포함시켜 주세요',
   ADD_SYM: '특수문자를 하나 이상 포함시켜 주세요',
 };
@@ -30,7 +30,7 @@ export const useFormValidation = () => {
   const validatePassword = (password: string) => {
     let valid = false;
     let error = '';
-    const minCharRegex = /.{4,}/;
+    const minCharRegex = /.{8,}/;
     const containsNumberRegex = /\d/;
     const containsSpecialCharRegex = /[!@#$%^&*]/;
 

@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { AccountContext } from './AccountContext';
-import { BASE_URL } from '../config';
+import { postService } from '../apis/postsService';
 
 export interface PostInfo {
   id?: number;
@@ -35,9 +35,8 @@ const PostsContextProvider: React.FC<PostsProviderProps> = ({ children }) => {
   const getPosts = async (id?: string) => {
     id = id || '';
     try {
-      const response = await fetch(`${BASE_URL}/posts?id=${id}`);
-      const data = await response.json();
-      setPosts(data);
+      const response = await postService.getPosts(id);
+      setPosts(response.data);
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
@@ -45,17 +44,10 @@ const PostsContextProvider: React.FC<PostsProviderProps> = ({ children }) => {
 
   const createPost = async (post: PostInfo) => {
     try {
-      const response = await fetch(`${BASE_URL}/posts`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${sessionJWT}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(post),
-      });
-      const data = await response.json();
+      const response = await postService.createPost(post, sessionJWT);
+
       if (response.status === 200) {
-        setPosts([...posts, data]);
+        setPosts([...posts, response.data]);
         return true;
       }
     } catch (error) {
@@ -65,25 +57,23 @@ const PostsContextProvider: React.FC<PostsProviderProps> = ({ children }) => {
 
   const deletePost = async (id: number) => {
     try {
-      const response = await fetch(`${BASE_URL}/posts/${id}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${sessionJWT}`,
-        },
-      });
+      const response = await postService.deletePost(id, sessionJWT);
 
       if (response.status === 200) {
         setPosts(posts.filter(post => post.id !== id));
         return true;
-      } else if (response.status === 403) {
-        alert('권한이 없습니다.');
-        return false;
       } else {
         console.error('Error deleting post:', response);
+        alert('글 삭제에 실패했습니다.');
         return false;
       }
     } catch (error) {
       console.error('Error deleting post:', error);
+      if (error.response.status === 403) {
+        alert('권한이 없습니다.');
+      } else {
+        alert('글 삭제에 실패했습니다.');
+      }
     }
   };
 

@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { AccountContext } from './AccountContext';
-import { BASE_URL } from '../config';
+import { commentsService } from '../apis/commentsService';
 
 export interface CommentInfo {
   id?: number;
@@ -37,9 +37,8 @@ const CommentsContextProvider: React.FC<CommentsProviderProps> = ({
   const getComments = async (id?: string) => {
     id = id || '';
     try {
-      const response = await fetch(`${BASE_URL}/comments?postId=${id}`);
-      const data = await response.json();
-      setComments(data);
+      const response = await commentsService.getComments(id);
+      setComments(response.data);
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
@@ -47,18 +46,13 @@ const CommentsContextProvider: React.FC<CommentsProviderProps> = ({
 
   const createComment = async (commentData: CommentInfo) => {
     try {
-      const response = await fetch(`${BASE_URL}/comments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Berarer ${sessionJWT}`,
-        },
-        body: JSON.stringify(commentData),
-      });
+      const response = await commentsService.createComment(
+        commentData,
+        sessionJWT,
+      );
 
-      const data = await response.json();
       if (response.status === 200) {
-        setComments([...comments, data]);
+        setComments([...comments, response.data]);
         return true;
       } else {
         return false;
@@ -70,12 +64,7 @@ const CommentsContextProvider: React.FC<CommentsProviderProps> = ({
 
   const deleteComment = async (id: number) => {
     try {
-      const response = await fetch(`${BASE_URL}/comments/${id}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${sessionJWT}`,
-        },
-      });
+      const response = await commentsService.deleteComment(id, sessionJWT);
       if (response.status === 200) {
         setComments(comments.filter(comment => comment.id !== id));
         return true;

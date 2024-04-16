@@ -1,10 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AccountContext } from '../../ContextAPI/AccountContext';
+import { PostsContext } from '../../ContextAPI/PostsContext';
 import { Icon, Title, Button, InputBox, InputLine } from '../../components';
 import { PAGE_CONFIGS, BUTTON_CONFIGS } from './DATA';
 import styled from 'styled-components';
-import { PostsContext } from '../../ContextAPI/PostsContext';
 
 const AddPost: React.FC = () => {
   const { createPost } = useContext(PostsContext);
@@ -66,11 +65,7 @@ const AddPost: React.FC = () => {
         name={PAGE_CONFIGS.inputContent.name}
         title={PAGE_CONFIGS.inputContent.title}
       />
-      <Button
-        btnName={BUTTON_CONFIGS.btnName}
-        btnStyle={BUTTON_CONFIGS.btnStyle}
-        onClickHandler={submitPost}
-      />
+      <Button {...BUTTON_CONFIGS} onClickHandler={submitPost} />
     </Wrapper>
   );
 };

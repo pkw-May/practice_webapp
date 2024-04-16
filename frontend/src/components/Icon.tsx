@@ -6,8 +6,8 @@ import {
   faAnglesLeft,
   faHome,
   faUser,
-  faSignOut,
-  faSignIn,
+  faUserXmark,
+  faUserCheck,
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -26,8 +26,8 @@ interface IconStyle {
 const iconList = {
   home: faHome,
   back: faAnglesLeft,
-  signin: faSignIn,
-  signout: faSignOut,
+  signin: faUserCheck,
+  signout: faUserXmark,
   user: faUser,
   trash: faTrashCan,
 };

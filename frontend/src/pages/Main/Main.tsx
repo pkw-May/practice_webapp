@@ -1,9 +1,10 @@
 import React, { useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { AccountContext } from '../../ContextAPI/AccountContext';
 import { PostsContext, PostInfo } from '../../ContextAPI/PostsContext';
-import PostBox from '../../components/PostBox';
-import { Icon, Title, Button } from '../../components';
+
+import { Icon, Title, Button, PostBox } from '../../components';
 import { PAGE_CONFIGS, BUTTON_CONFIGS } from './DATA';
 import styled from 'styled-components';
 
