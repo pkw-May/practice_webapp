@@ -14,6 +14,7 @@ exports.getCommentsByPostId = async (postId) => {
 		for (const comment of comments) {
 			const userInfo = await getUserById({ userId: comment.userId });
 			comment.name = userInfo[0].name;
+			comment.colorCode = userInfo[0].colorCode;
 		}
 		return comments;
 	} catch (err) {

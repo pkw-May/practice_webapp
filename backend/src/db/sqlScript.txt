@@ -4,6 +4,8 @@ USE jungleTest;
 
 CREATE TABLE Users (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    oauthId INT,
+    colorCode VARCHAR(100),
     email VARCHAR(255) NOT NULL,
     name VARCHAR(100),
     deleted BOOLEAN DEFAULT FALSE

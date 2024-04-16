@@ -25,6 +25,7 @@ exports.getPostById = async (id) => {
 
 		const userInfo = await getUserById({ userId: post[0].userId });
 		post[0].name = userInfo[0].name;
+		post[0].colorCode = userInfo[0].colorCode;
 
 		return post;
 	} catch (error) {

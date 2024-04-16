@@ -52,15 +52,20 @@ exports.createUser = ({ userData }) => {
 
 	return new Promise((resolve, reject) => {
 		const name = email.substring(0, email.indexOf('@'));
+		const colorCode = Math.floor(Math.random() * 16777215).toString(16);
 		const query =
-			'INSERT INTO Users (name, email, oauthId, deleted) VALUES (?, ?, ?, false)';
-		connection.query(query, [name, email, oauthId], (error, result, fields) => {
-			if (error) {
-				console.error(error);
-				reject(error);
-			} else {
-				resolve({ success: true, id: result.insertId, ...result });
+			'INSERT INTO Users (name, colorCode, email, oauthId, deleted) VALUES (?, ?, ?, ?, false)';
+		connection.query(
+			query,
+			[name, colorCode, email, oauthId],
+			(error, result, fields) => {
+				if (error) {
+					console.error(error);
+					reject(error);
+				} else {
+					resolve({ success: true, id: result.insertId, ...result });
+				}
 			}
-		});
+		);
 	});
 };
