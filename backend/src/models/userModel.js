@@ -48,7 +48,6 @@ exports.getUserByOAuthId = ({ oauthId }) => {
 };
 
 exports.createUser = ({ userData }) => {
-	console.log('server: model signup, userData: ', userData);
 	const { email, oauthId } = userData;
 
 	return new Promise((resolve, reject) => {
